@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Dindin // Finanças Pessoais Premium</title>
+  
+  <!-- Fontes do Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Estilos Gerais -->
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Chart.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Lucide Icons (CDN) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- Layout Principal -->
+  <div class="app-container">
+    
+    <!-- Sidebar de Navegação (Desktop) -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <div class="logo-glow"></div>
+          <i data-lucide="compass" class="brand-icon"></i>
+        </div>
+        <span class="brand-name">Meu Dindin</span>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-item active" data-view="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#transactions" class="nav-item" data-view="transactions">
+          <i data-lucide="arrow-left-right"></i>
+          <span>Transações</span>
+        </a>
+        <a href="#budgets" class="nav-item" data-view="budgets">
+          <i data-lucide="pie-chart"></i>
+          <span>Orçamentos</span>
+        </a>
+        <a href="#accounts-categories" class="nav-item" data-view="accounts-categories">
+          <i data-lucide="wallet"></i>
+          <span>Contas & Categorias</span>
+        </a>
+        <a href="#recurring" class="nav-item" data-view="recurring">
+          <i data-lucide="calendar-clock"></i>
+          <span>Contas Recorrentes</span>
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar">C</div>
+          <div class="user-info">
+            <span class="user-name">Usuário</span>
+            <span class="user-role">Meu Planejador Financeiro</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Área Principal de Conteúdo -->
+    <main class="main-content">
+      
+      <!-- Topbar / Cabeçalho Superior -->
+      <header class="topbar">
+        <div class="welcome-section">
+          <h1 id="welcome-title">Olá, Usuário</h1>
+          <p>Aqui está o resumo da sua saúde financeira hoje.</p>
+        </div>
+        
+        <div class="topbar-actions">
+          <!-- Status de Sincronização Cloud -->
+          <button id="btn-cloud-sync-status" class="btn-icon cloud-status-disconnected" title="Sincronização Cloud">
+            <i data-lucide="cloud-off" id="cloud-status-icon"></i>
+          </button>
+
+          <!-- Filtro de Período -->
+          <div class="period-selector">
+            <button id="btn-prev-month" class="btn-icon"><i data-lucide="chevron-left"></i></button>
+            <span id="current-period-label">Maio 2026</span>
+            <button id="btn-next-month" class="btn-icon"><i data-lucide="chevron-right"></i></button>
+          </div>
+          
+          <!-- Botão Ação Rápida -->
+          <button id="btn-new-transaction" class="btn btn-primary btn-glow">
+            <i data-lucide="plus-circle"></i>
+            <span>Nova Transação</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- View: Dashboard (Geral) -->
+      <section id="view-dashboard" class="app-view active">
+        <!-- Cards de Estatísticas Rápidas -->
+        <div class="metrics-grid">
+          <!-- Card Saldo Geral -->
+          <div class="metric-card card-glow-indigo">
+            <div class="metric-header">
+              <span>Saldo Geral Consolidado</span>
+              <div class="metric-icon-bg indigo-bg">
+                <i data-lucide="piggy-bank" class="indigo-color"></i>
+              </div>
+            </div>
+            <div class="metric-value" id="dash-total-balance">R$ 0,00</div>
+            <div class="metric-footer">
+              <span class="positive-trend"><i data-lucide="trending-up"></i> +4.2%</span>
+              <span class="trend-label">este mês</span>
+            </div>
+          </div>
+          
+          <!-- Card Receitas -->
+          <div class="metric-card card-glow-emerald">
+            <div class="metric-header">
+              <span>Receitas Totais</span>
+              <div class="metric-icon-bg emerald-bg">
+                <i data-lucide="arrow-down-left" class="emerald-color"></i>
+              </div>
+            </div>
+            <div class="metric-value emerald-color" id="dash-total-income">R$ 0,00</div>
+            <div class="metric-footer">
+              <span class="positive-trend" id="dash-income-trend"><i data-lucide="trending-up"></i> +12.5%</span>
+              <span class="trend-label">vs. mês anterior</span>
+            </div>
+          </div>
+
+          <!-- Card Despesas -->
+          <div class="metric-card card-glow-rose">
+            <div class="metric-header">
+              <span>Despesas Totais</span>
+              <div class="metric-icon-bg rose-bg">
+                <i data-lucide="arrow-up-right" class="rose-color"></i>
+              </div>
+            </div>
+            <div class="metric-value rose-color" id="dash-total-expenses">R$ 0,00</div>
+            <div class="metric-footer">
+              <span class="negative-trend" id="dash-expense-trend"><i data-lucide="trending-down"></i> -3.1%</span>
+              <span class="trend-label">economizados</span>
+            </div>
+          </div>
+
+          <!-- Card Taxa de Economia -->
+          <div class="metric-card card-glow-amber">
+            <div class="metric-header">
+              <span>Taxa de Poupança</span>
+              <div class="metric-icon-bg amber-bg">
+                <i data-lucide="percent" class="amber-color"></i>
+              </div>
+            </div>
+            <div class="metric-value amber-color" id="dash-savings-rate">0%</div>
+            <div class="metric-footer">
+              <div class="progress-bar-small">
+                <div class="progress-bar-fill" id="dash-savings-progress" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grade de Gráficos -->
+        <div class="charts-grid">
+          <!-- Gráfico de Evolução -->
+          <div class="chart-card large-chart">
+            <div class="chart-header">
+              <h3>Evolução Financeira</h3>
+              <p>Histórico mensal de Receitas vs Despesas</p>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-evolution"></canvas>
+            </div>
+          </div>
+
+          <!-- Gráfico de Categorias -->
+          <div class="chart-card small-chart">
+            <div class="chart-header">
+              <h3>Despesas por Categoria</h3>
+              <p>Distribuição dos gastos do mês corrente</p>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-categories"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conteúdo Secundário (Lançamentos Recentes + Alertas) -->
+        <div class="dashboard-details-grid">
+          <!-- Transações Recentes -->
+          <div class="details-card">
+            <div class="card-title-container">
+              <h3>Transações Recentes</h3>
+              <a href="#transactions" class="link-view-all" data-nav="transactions">Ver todas</a>
+            </div>
+            <div class="recent-list" id="dash-recent-transactions">
+              <!-- Populado dinamicamente -->
+              <div class="empty-state">Nenhum lançamento no período.</div>
+            </div>
+          </div>
+
+          <!-- Alertas e Despesas Recorrentes -->
+          <div class="details-card">
+            <div class="card-title-container">
+              <h3>Contas a Vencer & Alertas</h3>
+              <a href="#recurring" class="link-view-all" data-nav="recurring">Gerenciar</a>
+            </div>
+            <div class="alert-widgets-container" id="dash-alerts-container">
+              <!-- Orçamentos perigosos ou contas recorrentes próximas -->
+              <div class="empty-state">Tudo sob controle! Nenhum alerta crítico.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View: Transações -->
+      <section id="view-transactions" class="app-view">
+        <div class="view-header">
+          <h2>Lista de Transações</h2>
+          <div class="transactions-actions">
+            <button id="btn-export" class="btn btn-secondary"><i data-lucide="download"></i> Exportar Dados</button>
+            <button id="btn-import-trigger" class="btn btn-secondary"><i data-lucide="upload"></i> Importar Dados</button>
+            <input type="file" id="file-import" accept=".json" style="display: none;">
+            <button id="btn-reset" class="btn btn-danger"><i data-lucide="trash-2"></i> Limpar Tudo</button>
+          </div>
+        </div>
+
+        <!-- Filtros Avançados -->
+        <div class="filter-panel">
+          <div class="filter-group flex-1">
+            <label for="filter-search">Buscar descrição</label>
+            <div class="search-input-wrapper">
+              <i data-lucide="search" class="search-icon"></i>
+              <input type="text" id="filter-search" placeholder="Ex: Supermercado, Salário...">
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label for="filter-type">Tipo</label>
+            <select id="filter-type" class="form-input">
+              <option value="all">Todos</option>
+              <option value="income">Receita (+)</option>
+              <option value="expense">Despesa (-)</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filter-category">Categoria</label>
+            <select id="filter-category" class="form-input">
+              <option value="all">Todas</option>
+              <!-- Populado via JS -->
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filter-account">Conta</label>
+            <select id="filter-account" class="form-input">
+              <option value="all">Todas as Contas</option>
+              <!-- Populado via JS -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Tabela de Transações -->
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 120px;">Data</th>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Conta</th>
+                <th style="text-align: right; width: 150px;">Valor</th>
+                <th style="text-align: center; width: 120px;">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-list-tbody">
+              <!-- Populado via JS -->
+            </tbody>
+          </table>
+          <div id="transactions-empty-state" class="empty-state" style="display: none;">
+            <i data-lucide="inbox" style="width: 48px; height: 48px; opacity: 0.5; margin-bottom: 12px;"></i>
+            <p>Nenhuma transação localizada com os filtros ativos.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- View: Orçamentos & Metas -->
+      <section id="view-budgets" class="app-view">
+        
+        <!-- Abas Metas / Orçamentos -->
+        <div class="category-tabs" style="margin-bottom: 24px; max-width: 450px;">
+          <button class="tab-item active" id="tab-budgets-expenses">Limites de Gastos (Orçamentos)</button>
+          <button class="tab-item" id="tab-budgets-goals">Objetivos de Poupança (Metas)</button>
+        </div>
+
+        <!-- SUBVIEW A: Limites de Gastos (Orçamentos) -->
+        <div id="subview-budgets-expenses-container">
+          <div class="view-header-row" style="margin-bottom: 24px;">
+            <div>
+              <h2>Gestão de Orçamentos</h2>
+              <p class="subtitle">Defina limites de despesas diárias, mensais ou anuais por categoria para não perder o controle.</p>
+            </div>
+            <button id="btn-new-budget" class="btn btn-primary"><i data-lucide="plus"></i> Configurar Orçamento</button>
+          </div>
+
+          <div class="budgets-summary-grid" style="margin-bottom: 32px;">
+            <!-- Orçamento Diário Estimado -->
+            <div class="budget-summary-card">
+              <div class="summary-title">Orçamento Diário Consolidado</div>
+              <div class="summary-value" id="budget-summary-daily">R$ 0,00 / dia</div>
+              <p class="summary-desc">Gasto máximo planejado em 24h</p>
+            </div>
+            <!-- Orçamento Mensal Consolidado -->
+            <div class="budget-summary-card">
+              <div class="summary-title">Orçamento Mensal Consolidado</div>
+              <div class="summary-value" id="budget-summary-monthly">R$ 0,00 / mês</div>
+              <p class="summary-desc">Total orçado para o mês corrente</p>
+            </div>
+            <!-- Orçamento Anual Consolidado -->
+            <div class="budget-summary-card">
+              <div class="summary-title">Orçamento Anual Consolidado</div>
+              <div class="summary-value" id="budget-summary-yearly">R$ 0,00 / ano</div>
+              <p class="summary-desc">Planejamento anual geral</p>
+            </div>
+          </div>
+
+          <!-- Grade de Orçamentos -->
+          <h3 class="section-title">Limites por Categorias</h3>
+          <div class="budgets-grid" id="budgets-container">
+            <!-- Populado via JS -->
+            <div class="empty-state">Nenhum orçamento configurado ainda. Defina limites para suas despesas!</div>
+          </div>
+        </div>
+
+        <!-- SUBVIEW B: Objetivos de Poupança (Metas) -->
+        <div id="subview-budgets-goals-container" style="display: none;">
+          <div class="view-header-row" style="margin-bottom: 24px;">
+            <div>
+              <h2>Metas de Poupança & Investimento</h2>
+              <p class="subtitle">Acompanhe objetivos financeiros (Viagem, Reserva de Emergência, Compras) e economize mensalmente.</p>
+            </div>
+            <button id="btn-new-goal" class="btn btn-primary"><i data-lucide="plus"></i> Criar Nova Meta</button>
+          </div>
+
+          <div class="budgets-summary-grid" style="margin-bottom: 32px;">
+            <div class="budget-summary-card">
+              <div class="summary-title">Total Alvo Projetado</div>
+              <div class="summary-value" id="goal-summary-target">R$ 0,00</div>
+              <p class="summary-desc">Soma de todas as metas ativas</p>
+            </div>
+            <div class="budget-summary-card">
+              <div class="summary-title">Total Poupado Acumulado</div>
+              <div class="summary-value emerald-color" id="goal-summary-saved">R$ 0,00</div>
+              <p class="summary-desc">Montante acumulado até o momento</p>
+            </div>
+            <div class="budget-summary-card">
+              <div class="summary-title">Economia Mensal Sugerida</div>
+              <div class="summary-value indigo-color" id="goal-summary-suggested">R$ 0,00 / mês</div>
+              <p class="summary-desc">Meta mensal média para atingir os prazos</p>
+            </div>
+          </div>
+
+          <!-- Grade de Metas -->
+          <h3 class="section-title">Meus Objetivos Cadastrados</h3>
+          <div class="budgets-grid" id="goals-container">
+            <!-- Populado via JS -->
+            <div class="empty-state">Nenhuma meta configurada ainda. Crie seu primeiro objetivo!</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- View: Contas e Categorias -->
+      <section id="view-accounts-categories" class="app-view">
+        <div class="accounts-categories-grid">
+          
+          <!-- Seção de Contas -->
+          <div class="flex-column gap-6">
+            <div class="section-card">
+              <div class="card-header-actions">
+                <h3>Minhas Contas & Carteiras</h3>
+                <button id="btn-add-account" class="btn btn-secondary btn-sm"><i data-lucide="plus"></i> Nova Conta</button>
+              </div>
+              <p class="card-subtitle">Gerencie seus bancos, cartões de crédito e carteiras de dinheiro físico.</p>
+              
+              <div class="accounts-list-grid" id="accounts-container">
+                <!-- Populado via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção de Categorias -->
+          <div class="flex-column gap-6">
+            <div class="section-card">
+              <div class="card-header-actions">
+                <h3>Categorias Financeiras</h3>
+                <button id="btn-add-category" class="btn btn-secondary btn-sm"><i data-lucide="plus"></i> Nova Categoria</button>
+              </div>
+              <p class="card-subtitle">Crie marcadores com cores e ícones para classificar receitas e despesas.</p>
+
+              <!-- Abas Categoria (Receitas / Despesas) -->
+              <div class="category-tabs">
+                <button class="tab-item active" data-tab="expense">Despesas</button>
+                <button class="tab-item" data-tab="income">Receitas</button>
+              </div>
+              
+              <div class="categories-list-grid" id="categories-container">
+                <!-- Populado via JS -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Zona de Perigo (Zerar Dados) -->
+        <div class="section-card danger-zone-card" style="margin-top: 32px; border: 1px solid rgba(244, 63, 94, 0.2); background: rgba(244, 63, 94, 0.02);">
+          <div class="card-header-actions">
+            <h3 style="color: var(--color-rose); display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="shield-alert"></i> Zona de Perigo
+            </h3>
+          </div>
+          <p class="card-subtitle">Opções irreversíveis para limpar dados demonstrativos e começar a usar o aplicativo do absoluto zero.</p>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px;">
+            <button id="btn-wipe-transactions" class="btn btn-danger btn-sm">
+              <i data-lucide="refresh-cw"></i> Limpar Lançamentos & Saldo Zero
+            </button>
+            <button id="btn-wipe-nuclear" class="btn btn-danger btn-sm" style="background: var(--color-rose); color: white; border: none;">
+              <i data-lucide="trash-2"></i> Zerar Aplicativo Completo
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- View: Contas Recorrentes -->
+      <section id="view-recurring" class="app-view">
+        <div class="view-header-row">
+          <div>
+            <h2>Despesas & Receitas Recorrentes</h2>
+            <p class="subtitle">Cadastre assinaturas de streaming, aluguel, salários fixos ou parcelamentos para controle preditivo de caixa.</p>
+          </div>
+          <button id="btn-new-recurring" class="btn btn-primary"><i data-lucide="plus"></i> Cadastrar Recorrente</button>
+        </div>
+
+        <div class="recurring-grid" id="recurring-container">
+          <!-- Populado via JS -->
+          <div class="empty-state">Nenhum lançamento recorrente configurado. Cadastre suas assinaturas ou receitas fixas!</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Barra de Navegação Inferior (Mobile) -->
+    <nav class="bottom-nav">
+      <a href="#dashboard" class="bottom-nav-item active" data-view="dashboard">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dash</span>
+      </a>
+      <a href="#transactions" class="bottom-nav-item" data-view="transactions">
+        <i data-lucide="arrow-left-right"></i>
+        <span>Transações</span>
+      </a>
+      <a href="#budgets" class="bottom-nav-item" data-view="budgets">
+        <i data-lucide="pie-chart"></i>
+        <span>Metas</span>
+      </a>
+      <a href="#accounts-categories" class="bottom-nav-item" data-view="accounts-categories">
+        <i data-lucide="wallet"></i>
+        <span>Contas</span>
+      </a>
+      <a href="#recurring" class="bottom-nav-item" data-view="recurring">
+        <i data-lucide="calendar-clock"></i>
+        <span>Agenda</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- ==================== MODAIS ==================== -->
+
+  <!-- Modal: Adicionar/Editar Transação -->
+  <div id="modal-transaction" class="modal-overlay">
+    <div class="modal-content glass-modal">
+      <div class="modal-header">
+        <h3 id="modal-transaction-title">Novo Lançamento</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <form id="form-transaction" class="modal-form">
+        <input type="hidden" id="tx-id">
+        
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="tx-type">Tipo de Lançamento</label>
+            <div class="type-segmented-control">
+              <label class="control-option">
+                <input type="radio" name="tx-type" value="expense" checked>
+                <span class="control-label btn-type-expense">Despesa</span>
+              </label>
+              <label class="control-option">
+                <input type="radio" name="tx-type" value="income">
+                <span class="control-label btn-type-income">Receita</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="tx-value">Valor (R$)</label>
+            <input type="number" id="tx-value" step="0.01" min="0.01" class="form-input text-highlight" placeholder="0,00" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tx-description">Descrição</label>
+          <input type="text" id="tx-description" class="form-input" placeholder="Ex: Compra no Supermercado, Salário Mensal..." required>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label for="tx-date">Data</label>
+            <input type="date" id="tx-date" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="tx-category">Categoria</label>
+            <select id="tx-category" class="form-input" required>
+              <!-- Populado via JS -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tx-account">Conta de Origem/Destino</label>
+            <select id="tx-account" class="form-input" required>
+              <!-- Populado via JS -->
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group form-checkbox-group">
+          <label class="checkbox-container">
+            <input type="checkbox" id="tx-is-recurring">
+            <span class="checkmark"></span>
+            Lançamento recorrente? (Faturar automaticamente todo mês)
+          </label>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-glow">Salvar Lançamento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Adicionar/Editar Conta -->
+  <div id="modal-account" class="modal-overlay">
+    <div class="modal-content glass-modal">
+      <div class="modal-header">
+        <h3 id="modal-account-title">Nova Conta Financeira</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <form id="form-account" class="modal-form">
+        <input type="hidden" id="account-id">
+        
+        <div class="form-group">
+          <label for="account-name">Nome da Conta / Banco</label>
+          <input type="text" id="account-name" class="form-input" placeholder="Ex: NuBank, Santander, Carteira" required>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="account-type">Tipo de Conta</label>
+            <select id="account-type" class="form-input" required>
+              <option value="checking">Conta Corrente</option>
+              <option value="savings">Poupança / Investimento</option>
+              <option value="credit">Cartão de Crédito</option>
+              <option value="cash">Dinheiro em Espécie</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="account-balance">Saldo Inicial (R$)</label>
+            <input type="number" id="account-balance" step="0.01" class="form-input" placeholder="0,00" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Conta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Adicionar/Editar Categoria -->
+  <div id="modal-category" class="modal-overlay">
+    <div class="modal-content glass-modal">
+      <div class="modal-header">
+        <h3 id="modal-category-title">Nova Categoria</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <form id="form-category" class="modal-form">
+        <input type="hidden" id="category-id">
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="category-type">Tipo da Categoria</label>
+            <select id="category-type" class="form-input" required>
+              <option value="expense">Despesa</option>
+              <option value="income">Receita</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="category-name">Nome da Categoria</label>
+            <input type="text" id="category-name" class="form-input" placeholder="Ex: Alimentação, Lazer, Bônus..." required>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="category-color">Cor Visual</label>
+            <input type="color" id="category-color" class="form-input form-color-picker" value="#6366f1">
+          </div>
+          <div class="form-group">
+            <label for="category-icon">Ícone</label>
+            <select id="category-icon" class="form-input" required>
+              <option value="shopping-bag">🛍️ Sacola/Compras</option>
+              <option value="utensils">🍴 Alimentação/Restaurantes</option>
+              <option value="car">🚗 Transporte/Carro</option>
+              <option value="home">🏠 Casa/Aluguel</option>
+              <option value="clapperboard">🎬 Entretenimento/Lazer</option>
+              <option value="heart-pulse">❤️ Saúde/Farmácia</option>
+              <option value="graduation-cap">🎓 Educação/Curso</option>
+              <option value="briefcase">💼 Salário/Trabalho</option>
+              <option value="trending-up">📈 Investimentos/Rendimentos</option>
+              <option value="gift">🎁 Presentes/Extras</option>
+              <option value="help-circle">❓ Outros</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Categoria</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Adicionar/Editar Orçamento -->
+  <div id="modal-budget" class="modal-overlay">
+    <div class="modal-content glass-modal">
+      <div class="modal-header">
+        <h3 id="modal-budget-title">Configurar Limite de Orçamento</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <form id="form-budget" class="modal-form">
+        <input type="hidden" id="budget-id">
+
+        <div class="form-group">
+          <label for="budget-category">Categoria Vinculada</label>
+          <select id="budget-category" class="form-input" required>
+            <!-- Populado via JS (apenas despesas) -->
+          </select>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="budget-period">Período do Limite</label>
+            <select id="budget-period" class="form-input" required>
+              <option value="daily">Diário</option>
+              <option value="monthly" selected>Mensal</option>
+              <option value="yearly">Anual</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="budget-amount">Valor Limite (R$)</label>
+            <input type="number" id="budget-amount" step="0.01" min="0.01" class="form-input text-highlight" placeholder="0,00" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-glow">Salvar Orçamento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Adicionar/Editar Lançamento Recorrente -->
+  <div id="modal-recurring" class="modal-overlay">
+    <div class="modal-content glass-modal">
+      <div class="modal-header">
+        <h3 id="modal-recurring-title">Cadastrar Lançamento Recorrente</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <form id="form-recurring" class="modal-form">
+        <input type="hidden" id="recurring-id">
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="recurring-type">Tipo</label>
+            <select id="recurring-type" class="form-input" required>
+              <option value="expense">Despesa Recorrente</option>
+              <option value="income">Receita Recorrente</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="recurring-value">Valor da Parcela (R$)</label>
+            <input type="number" id="recurring-value" step="0.01" min="0.01" class="form-input text-highlight" placeholder="0,00" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="recurring-description">Descrição / Assinatura</label>
+          <input type="text" id="recurring-description" class="form-input" placeholder="Ex: Netflix, Aluguel Ap, Salário Fixo..." required>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label for="recurring-frequency">Frequência</label>
+            <select id="recurring-frequency" class="form-input" required>
+              <option value="weekly">Semanal</option>
+              <option value="monthly" selected>Mensal</option>
+              <option value="yearly">Anual</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="recurring-category">Categoria</label>
+            <select id="recurring-category" class="form-input" required>
+              <!-- Populado via JS -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="recurring-account">Conta Padrão</label>
+            <select id="recurring-account" class="form-input" required>
+              <!-- Populado via JS -->
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="recurring-start-date">Data Próximo Vencimento</label>
+            <input type="date" id="recurring-start-date" class="form-input" required>
+          </div>
+          <div class="form-group form-checkbox-group" style="justify-content: flex-end; height: 100%; display: flex; align-items: center;">
+            <label class="checkbox-container">
+              <input type="checkbox" id="recurring-auto-process" checked>
+              <span class="checkmark"></span>
+              Auto-lancar?
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-glow">Salvar Recorrente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Sincronização Cloud -->
+  <div id="modal-cloud-sync" class="modal-overlay">
+    <div class="modal-content glass-modal" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3>Sincronização em Nuvem (Google Sheets)</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-form" style="max-height: 80vh; overflow-y: auto; padding-top: 24px;">
+        
+        <!-- Instruções de Conexão (Carousel / Passos) -->
+        <div class="sync-instructions-box">
+          <div class="sync-steps-header">
+            <h4>Como Configurar a Sincronização em 3 Passos Rápidos:</h4>
+          </div>
+          <div class="sync-step-item">
+            <span class="step-badge">1</span>
+            <p>Crie uma planilha em branco no seu <strong>Google Drive</strong>. No menu superior da planilha, clique em <strong>Extensões</strong> &gt; <strong>Apps Script</strong>.</p>
+          </div>
+          <div class="sync-step-item">
+            <span class="step-badge">2</span>
+            <p>Apague qualquer código existente na tela que abrir, copie e cole o código completo abaixo, depois clique em <strong>Salvar (Ícone de disquete)</strong>.</p>
+          </div>
+          
+          <!-- Caixa de Código Copiável -->
+          <div class="code-box-wrapper">
+            <label>Código do Google Apps Script:</label>
+            <textarea readonly class="code-box-textarea" id="apps-script-code-template">function doGet(e) {
+  var sheet = getOrCreateSheet("_STATE_");
+  var lastUpdated = sheet.getRange("A1").getValue();
+  var stateJson = sheet.getRange("B1").getValue();
+  
+  var response = {
+    lastUpdated: lastUpdated || new Date().toISOString(),
+    state: stateJson ? JSON.parse(stateJson) : null
+  };
+  
+  return ContentService.createTextOutput(JSON.stringify(response))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var contents = JSON.parse(e.postData.contents);
+  var sheet = getOrCreateSheet("_STATE_");
+  
+  sheet.getRange("A1").setValue(contents.lastUpdated);
+  sheet.getRange("B1").setValue(JSON.stringify(contents.state));
+  
+  // Atualiza abas amigáveis na planilha para leitura do usuário
+  updateReadableSheets(contents.state);
+  
+  return ContentService.createTextOutput(JSON.stringify({ success: true }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function getOrCreateSheet(name) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+  }
+  return sheet;
+}
+
+function updateReadableSheets(state) {
+  if (!state) return;
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  // 1. Transações
+  if (state.transactions) {
+    var shTxs = getOrCreateSheet("Transações");
+    shTxs.clear();
+    shTxs.appendRow(["ID", "Data", "Descrição", "Tipo", "Categoria", "Conta", "Valor", "Recorrente"]);
+    shTxs.getRange("A1:H1").setFontWeight("bold").setBackground("#131b2e").setFontColor("#ffffff");
+    
+    state.transactions.forEach(function(t) {
+      var cat = state.categories ? state.categories.find(function(c) { return c.id === t.category; }) : null;
+      var acc = state.accounts ? state.accounts.find(function(a) { return a.id === t.account; }) : null;
+      
+      shTxs.appendRow([
+        t.id,
+        t.date,
+        t.description,
+        t.type === "income" ? "Receita" : "Despesa",
+        cat ? cat.name : "N/A",
+        acc ? acc.name : "N/A",
+        t.value,
+        t.isRecurring ? "Sim" : "Não"
+      ]);
+    });
+    
+    if (state.transactions.length > 0) {
+      shTxs.getRange(2, 7, state.transactions.length, 1).setNumberFormat("R$ #,##0.00");
+    }
+  }
+
+  // 2. Contas
+  if (state.accounts) {
+    var shAccs = getOrCreateSheet("Contas");
+    shAccs.clear();
+    shAccs.appendRow(["ID", "Nome da Conta", "Tipo", "Saldo Atual"]);
+    shAccs.getRange("A1:D1").setFontWeight("bold").setBackground("#131b2e").setFontColor("#ffffff");
+    state.accounts.forEach(function(a) {
+      shAccs.appendRow([a.id, a.name, a.type, a.balance]);
+    });
+    if (state.accounts.length > 0) {
+      shAccs.getRange(2, 4, state.accounts.length, 1).setNumberFormat("R$ #,##0.00");
+    }
+  }
+
+  // 3. Metas de Poupança (Goals)
+  if (state.goals) {
+    var shGoals = getOrCreateSheet("Metas");
+    shGoals.clear();
+    shGoals.appendRow(["ID", "Nome da Meta", "Valor Alvo", "Valor Poupado", "Data Limite", "Cor", "Ícone"]);
+    shGoals.getRange("A1:G1").setFontWeight("bold").setBackground("#131b2e").setFontColor("#ffffff");
+    state.goals.forEach(function(g) {
+      shGoals.appendRow([g.id, g.name, g.targetValue, g.currentValue, g.deadline, g.color, g.icon]);
+    });
+    if (state.goals.length > 0) {
+      shGoals.getRange(2, 3, state.goals.length, 2).setNumberFormat("R$ #,##0.00");
+    }
+  }
+}</textarea>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-copy-script" style="margin-top: 8px;"><i data-lucide="copy"></i> Copiar Código</button>
+          </div>
+
+          <div class="sync-step-item" style="margin-top: 16px;">
+            <span class="step-badge">3</span>
+            <p>Clique em <strong>Implantar</strong> &gt; <strong>Nova implantação</strong> no canto superior direito. Escolha o tipo <strong>App da web</strong>. Configure para executar como <strong>"Você"</strong> e quem tem acesso como <strong>"Qualquer pessoa"</strong>. Copie a URL do App da Web e cole no campo abaixo.</p>
+          </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 12px 0;">
+
+        <!-- Form de Sincronização -->
+        <div class="form-group">
+          <label for="sync-url-input">URL do Google Apps Script (Web App):</label>
+          <input type="url" id="sync-url-input" class="form-input" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+
+        <!-- Painel de Status -->
+        <div class="sync-status-panel">
+          <div class="sync-status-row">
+            <span>Status da Nuvem:</span>
+            <span id="cloud-sync-status-text" class="status-badge disconnected">Desconectado</span>
+          </div>
+          <div class="sync-status-row">
+            <span>Última Sincronização:</span>
+            <span id="cloud-last-sync-val" style="color: var(--text-secondary);">Nunca sincronizado</span>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="padding-top: 16px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center;">
+          <div>
+            <button type="button" id="btn-cloud-disconnect" class="btn btn-danger btn-sm" style="display: none;"><i data-lucide="cloud-off"></i> Desconectar</button>
+          </div>
+          
+          <div style="display: flex; gap: 12px;">
+            <button type="button" class="btn btn-secondary btn-sm btn-close-modal">Fechar</button>
+            <button type="button" id="btn-cloud-save-connect" class="btn btn-primary btn-sm btn-glow"><i data-lucide="link"></i> Conectar Planilha</button>
+            <button type="button" id="btn-cloud-sync-now" class="btn btn-primary btn-sm btn-glow" style="display: none;"><i data-lucide="refresh-cw"></i> Sincronizar Agora</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nova/Editar Meta Financeira -->
+  <div id="modal-goal" class="modal-overlay">
+    <div class="modal-content glass-modal">
+      <div class="modal-header">
+        <h3 id="modal-goal-title">Nova Meta Financeira</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <form id="form-goal" class="modal-form">
+        <input type="hidden" id="goal-id">
+
+        <div class="form-group">
+          <label for="goal-name">Nome do Objetivo</label>
+          <input type="text" id="goal-name" class="form-input" placeholder="Ex: Reserva de Emergência, Comprar Carro, Viagem..." required>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="goal-target">Valor Alvo (R$)</label>
+            <input type="number" id="goal-target" step="0.01" min="0.01" class="form-input text-highlight" placeholder="0,00" required>
+          </div>
+          <div class="form-group">
+            <label for="goal-current">Valor Já Poupado (R$)</label>
+            <input type="number" id="goal-current" step="0.01" min="0" class="form-input emerald-color" placeholder="0,00" required>
+          </div>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label for="goal-deadline">Data Limite (Alvo)</label>
+            <input type="date" id="goal-deadline" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="goal-color">Cor Temática</label>
+            <input type="color" id="goal-color" class="form-input form-color-picker" value="#6366f1">
+          </div>
+          <div class="form-group">
+            <label for="goal-icon">Ícone Lucide</label>
+            <select id="goal-icon" class="form-input" required>
+              <option value="piggy-bank">🐷 Reserva / Cofrinho</option>
+              <option value="home">🏠 Casa / Imóvel</option>
+              <option value="car">🚗 Transporte / Carro</option>
+              <option value="plane">✈️ Viagem / Avião</option>
+              <option value="laptop">💻 Tecnologia / Notebook</option>
+              <option value="graduation-cap">🎓 Estudos / Curso</option>
+              <option value="heart-pulse">❤️ Saúde / Bem-estar</option>
+              <option value="trophy">🏆 Conquista / Sonho</option>
+              <option value="shopping-bag">🛍️ Consumo / Compras</option>
+              <option value="help-circle">❓ Outros</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-glow">Salvar Meta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Ajuste Rápido de Meta (Depositar / Retirar) -->
+  <div id="modal-goal-adjust" class="modal-overlay">
+    <div class="modal-content glass-modal" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3 id="modal-goal-adjust-title">Movimentar Poupança</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <form id="form-goal-adjust" class="modal-form">
+        <input type="hidden" id="adjust-goal-id">
+
+        <div class="form-group">
+          <label>Tipo de Movimentação</label>
+          <div class="type-segmented-control">
+            <label class="control-option">
+              <input type="radio" name="adjust-type" value="deposit" checked>
+              <span class="control-label btn-type-income">Depositar (+)</span>
+            </label>
+            <label class="control-option">
+              <input type="radio" name="adjust-type" value="withdraw">
+              <span class="control-label btn-type-expense">Resgatar (-)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="adjust-value">Valor (R$)</label>
+          <input type="number" id="adjust-value" step="0.01" min="0.01" class="form-input text-highlight" placeholder="0,00" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-glow">Confirmar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Tour de Boas-vindas (Onboarding) -->
+  <div id="modal-onboarding" class="modal-overlay">
+    <div class="modal-content glass-modal">
+      <div class="onboarding-carousel">
+        <div class="onboarding-slides-container" id="onboarding-container">
+          
+          <!-- Slide 1: Boas-vindas -->
+          <div class="onboarding-slide">
+            <div class="onboarding-icon-wrapper">
+              <i data-lucide="compass"></i>
+            </div>
+            <h4>Boas-vindas ao Meu Dindin!</h4>
+            <p>Seu novo organizador financeiro pessoal com design premium e foco absoluto em <strong>Privacidade</strong>. Seus dados são guardados de forma encriptada e 100% segura apenas no seu computador!</p>
+          </div>
+          
+          <!-- Slide 2: Painel Dinâmico -->
+          <div class="onboarding-slide">
+            <div class="onboarding-icon-wrapper">
+              <i data-lucide="layout-dashboard"></i>
+            </div>
+            <h4>Dashboard Inteligente</h4>
+            <p>Acompanhe sua saúde financeira através de gráficos tridimensionais, fluxo de caixa mensal interativo e análises de despesas por categoria de forma ágil e prática.</p>
+          </div>
+          
+          <!-- Slide 3: Orçamentos & Metas -->
+          <div class="onboarding-slide">
+            <div class="onboarding-icon-wrapper">
+              <i data-lucide="pie-chart"></i>
+            </div>
+            <h4>Orçamentos & Metas</h4>
+            <p>Defina limites mensais de gastos com alertas visuais inteligentes e planeje seus sonhos calculando a economia mensal necessária com aportes rápidos de (+) e (-).</p>
+          </div>
+          
+          <!-- Slide 4: Nuvem Pessoal -->
+          <div class="onboarding-slide">
+            <div class="onboarding-icon-wrapper">
+              <i data-lucide="cloud"></i>
+            </div>
+            <h4>Sincronização Segura</h4>
+            <p>Se quiser, conecte o aplicativo diretamente ao seu próprio <strong>Google Sheets</strong> em nuvem de forma privada, protegida pela sua senha pessoal (Chave de Acesso).</p>
+          </div>
+
+        </div>
+      </div>
+      
+      <!-- Dots de Progresso -->
+      <div class="onboarding-progress-dots" id="onboarding-dots">
+        <span class="onboarding-dot active"></span>
+        <span class="onboarding-dot"></span>
+        <span class="onboarding-dot"></span>
+        <span class="onboarding-dot"></span>
+      </div>
+      
+      <!-- Footer de Navegação -->
+      <div class="onboarding-footer">
+        <button type="button" class="btn-onboarding-skip" id="btn-onboarding-skip">Pular</button>
+        <button type="button" class="btn btn-primary btn-glow btn-onboarding-next" id="btn-onboarding-next">
+          <span>Avançar</span>
+          <i data-lucide="chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Personalizar Perfil -->
+  <div id="modal-profile" class="modal-overlay">
+    <div class="modal-content glass-modal" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3>Personalizar Perfil</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      <form id="form-profile" class="modal-form">
+        <div class="form-group">
+          <label for="profile-name">Seu Nome</label>
+          <input type="text" id="profile-name" class="form-input text-highlight" placeholder="Ex: Seu Nome" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-glow">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script Principal -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

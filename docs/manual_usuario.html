@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Dindin - Manual Oficial do Usuário</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #080c14;
+      --card-dark: #0f1626;
+      --border-dark: rgba(255, 255, 255, 0.08);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.15);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --accent: #8b5cf6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-dark);
+      border: 1px solid var(--border-dark);
+      border-radius: 24px;
+      padding: 50px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(16px);
+    }
+
+    /* Print instruction banner */
+    .print-banner {
+      background: var(--primary-glow);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .print-banner-text p {
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    .print-banner-text span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .print-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .print-btn:hover {
+      background: #4f46e5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      font-size: 38px;
+      line-height: 1.2;
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #a5b4fc 0%, var(--primary) 50%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 40px;
+      font-weight: 400;
+    }
+
+    h2 {
+      font-size: 24px;
+      border-bottom: 2px solid var(--border-dark);
+      padding-bottom: 8px;
+      margin-top: 50px;
+      color: #a5b4fc;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: #e0e7ff;
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: #d1d5db;
+      font-size: 15px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-bottom: 20px;
+      padding-left: 24px;
+      color: #d1d5db;
+      font-size: 15px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin: 24px 0;
+      border-left: 4px solid;
+    }
+
+    .alert-note {
+      background: rgba(99, 102, 241, 0.08);
+      border-left-color: var(--primary);
+    }
+
+    .alert-tip {
+      background: rgba(16, 185, 129, 0.08);
+      border-left-color: var(--success);
+    }
+
+    .alert-warning {
+      background: rgba(245, 158, 11, 0.08);
+      border-left-color: var(--warning);
+    }
+
+    .alert-title {
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      margin-bottom: 6px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .alert-note .alert-title { color: #818cf8; }
+    .alert-tip .alert-title { color: #34d399; }
+    .alert-warning .alert-title { color: #fbbf24; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 25px 0;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-dark);
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    th {
+      background-color: rgba(255, 255, 255, 0.04);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Code blocks / steps */
+    code {
+      font-family: monospace, monospace;
+      background-color: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #f43f5e;
+    }
+
+    .step-list {
+      list-style-type: none;
+      counter-reset: step-counter;
+      padding-left: 0;
+    }
+
+    .step-list li {
+      position: relative;
+      padding-left: 45px;
+      margin-bottom: 25px;
+    }
+
+    .step-list li::before {
+      counter-increment: step-counter;
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .manual-screenshot {
+      width: 100%;
+      max-width: 650px;
+      border-radius: 12px;
+      border: 1px solid var(--border-dark);
+      margin: 20px auto;
+      display: block;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .page-break {
+      margin-top: 40px;
+      border-top: 1px dashed var(--border-dark);
+      padding-top: 40px;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-dark);
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #111827 !important;
+        padding: 0 !important;
+        font-size: 12pt;
+      }
+
+      .container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+      }
+
+      .print-banner {
+        display: none !important;
+      }
+
+      h1 {
+        background: none !important;
+        -webkit-text-fill-color: initial !important;
+        color: #111827 !important;
+        font-size: 28pt;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .subtitle {
+        color: #4b5563 !important;
+        margin-bottom: 30pt;
+      }
+
+      h2 {
+        color: #1f2937 !important;
+        border-bottom: 2pt solid #e5e7eb !important;
+        page-break-after: avoid;
+        margin-top: 30pt;
+        font-size: 18pt;
+      }
+
+      h3 {
+        color: #374151 !important;
+        page-break-after: avoid;
+        margin-top: 20pt;
+        font-size: 14pt;
+      }
+
+      p, li {
+        color: #374151 !important;
+        font-size: 11pt;
+      }
+
+      table {
+        background: transparent !important;
+        border: 1pt solid #cbd5e1 !important;
+        page-break-inside: avoid;
+      }
+
+      th {
+        background-color: #f1f5f9 !important;
+        color: #1e293b !important;
+        border-bottom: 1pt solid #cbd5e1 !important;
+      }
+
+      td {
+        border-bottom: 1pt solid #e2e8f0 !important;
+      }
+
+      code {
+        background-color: #f1f5f9 !important;
+        color: #b91c1c !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+
+      .alert {
+        border-left: 4pt solid !important;
+        background: #f8fafc !important;
+        page-break-inside: avoid;
+      }
+
+      .alert-note { border-left-color: #4f46e5 !important; }
+      .alert-tip { border-left-color: #16a34a !important; }
+      .alert-warning { border-left-color: #d97706 !important; }
+      
+      .alert-note .alert-title { color: #4f46e5 !important; }
+      .alert-tip .alert-title { color: #16a34a !important; }
+      .alert-warning .alert-title { color: #d97706 !important; }
+
+      .step-list li::before {
+        background: #4f46e5 !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .page-break {
+        page-break-before: always;
+        border-top: none !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+      }
+
+      footer {
+        border-top: 1pt solid #e5e7eb !important;
+        color: #9ca3af !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- PRINT BANNER FOR SCREEN VISUALIZATION -->
+    <div class="print-banner">
+      <div class="print-banner-text">
+        <p><strong>💡 Dica de PDF:</strong> Você pode imprimir este manual ou salvá-lo em formato PDF.</p>
+        <span>Pressione Ctrl + P ou clique no botão ao lado e selecione "Salvar como PDF" nas opções de impressora.</span>
+      </div>
+      <button class="print-btn" onclick="window.print()">Salvar como PDF</button>
+    </div>
+
+    <!-- COVER SECTION -->
+    <header>
+      <h1>Meu Dindin</h1>
+      <div class="subtitle">Manual de Instruções de Uso</div>
+    </header>
+
+    <hr style="border: none; border-top: 1px solid var(--border-dark); margin: 30px 0;">
+
+    <!-- INTRODUÇÃO -->
+    <section>
+      <h2>1. Introdução e Filosofia de Uso</h2>
+      <p>
+        O <strong>Meu Dindin</strong> é um organizador financeiro pessoal de alta performance, desenhado para ajudar você a conquistar o controle absoluto das suas finanças com simplicidade, elegância e segurança.
+      </p>
+      <p>
+        O grande diferencial do Meu Dindin é sua arquitetura **Local-First (Primeiro Local)**. Isso significa que, por padrão, todos os seus dados ficam salvos de forma protegida e 100% privada dentro do seu próprio computador. Nenhum servidor externo ou empresa tem acesso às suas receitas, despesas e saldos bancários. Você tem autonomia total e o aplicativo funciona perfeitamente mesmo sem internet!
+      </p>
+
+      <div class="alert alert-note">
+        <div class="alert-title">Nota Importante</div>
+        <p style="margin-bottom: 0;">Sua privacidade é nossa prioridade absoluta. Seus registros financeiros são guardados de forma segura localmente e pertencem exclusivamente a você.</p>
+      </div>
+    </section>
+
+    <!-- NAVEGAÇÃO E RECURSOS PRINCIPAIS -->
+    <section class="page-break">
+      <h2>2. Primeiros Passos e o Painel Principal (Dashboard)</h2>
+      
+      <h3>2.1 Personalizando seu Perfil</h3>
+      <p>
+        No canto inferior esquerdo da tela, você verá o card de identificação. Ele é interativo: basta clicar em cima do nome para abrir o modal de personalização. Ao digitar seu nome e clicar em salvar:
+      </p>
+      <ul>
+        <li>A mensagem de boas-vindas no cabeçalho superior mudará automaticamente (ex: <em>"Olá, Usuário"</em>).</li>
+        <li>O avatar será atualizado com as iniciais do seu nome em tempo real.</li>
+        <li>O subtítulo exibirá a identificação do seu assistente financeiro oficial.</li>
+      </ul>
+
+      <h3>2.2 O Painel Principal (Dashboard)</h3>
+      <p>
+        A tela principal funciona como uma central de controle financeiro integrada:
+      </p>
+      <ul>
+        <li><strong>Filtro de Período</strong>: Use a caixa de seleção de meses no topo direito para visualizar os lançamentos e relatórios de um mês específico.</li>
+        <li><strong>Saldos Rápidos</strong>: Acompanhe o Saldo Total (soma de todas as contas), Receitas (entradas do mês selecionado) e Despesas (saídas do mês selecionado) em cards flutuantes.</li>
+        <li><strong>Evolução Mensal (Gráfico de Linha)</strong>: Acompanhe visualmente se as suas despesas estão abaixo de suas receitas nos últimos 6 meses com curvas dinâmicas.</li>
+        <li><strong>Distribuição de Despesas (Gráfico de Rosca)</strong>: Veja proporcionalmente quais categorias estão consumindo mais o seu dinheiro no mês selecionado.</li>
+      </ul>
+
+      <h3>2.3 Criando e Gerenciando Contas</h3>
+      <p>
+        Na aba **Contas**, você pode cadastrar todos os locais onde guarda seu dinheiro (contas correntes, investimentos, carteira física, poupanças):
+      </p>
+      <ul>
+        <li>Clique em "Nova Conta", defina o nome (ex: "Nubank"), selecione o tipo e digite o saldo inicial.</li>
+        <li>Ao lançar novas receitas ou despesas nas contas, os saldos finais são recalculados na mesma hora!</li>
+      </ul>
+    </section>
+
+    <!-- METAS E ORÇAMENTOS -->
+    <section class="page-break">
+      <h2>3. Controlando Gastos e Realizando Sonhos</h2>
+      <p>
+        Na aba **Orçamentos & Metas**, você dispõe de duas ferramentas poderosas para manter a sua saúde financeira em dia:
+      </p>
+
+      <h3>3.1 Orçamentos de Despesas (Limites de Consumo)</h3>
+      <p>
+        Defina um limite de gastos mensais para categorias específicas (como Alimentação ou Lazer). O Meu Dindin guiará você com alertas visuais práticos através de barras coloridas:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Porcentagem do Limite Gasto</th>
+            <th>Cor da Barra</th>
+            <th>Significado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Abaixo de 80% gasto</strong></td>
+            <td style="color: var(--success); font-weight: bold;">Verde</td>
+            <td>Seu consumo nesta categoria está saudável e sob controle.</td>
+          </tr>
+          <tr>
+            <td><strong>De 80% a 100% gasto</strong></td>
+            <td style="color: var(--warning); font-weight: bold;">Amarelo</td>
+            <td>Atenção! Você está muito perto de atingir o limite estipulado.</td>
+          </tr>
+          <tr>
+            <td><strong>Mais de 100% gasto</strong></td>
+            <td style="color: var(--danger); font-weight: bold;">Vermelho</td>
+            <td>Limite estourado. Um alerta visual é exibido no topo do painel.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>3.2 Metas de Poupança (Savings Goals)</h3>
+      <p>
+        Planeje e Acompanhe de forma dinâmica a acumulação de dinheiro para os seus sonhos (como uma viagem de férias ou a reserva de emergência):
+      </p>
+      <ol>
+        <li>Crie um objetivo informando o valor total desejado e a data limite de conclusão.</li>
+        <li>O Meu Dindin calcula automaticamente a **cota mensal recomendada** para você poupar.</li>
+        <li>Use os botões de **(+) Poupado** e **(-) Retirar** direto no card da meta para lançar os aportes e resgates que fizer. A barra de porcentagem sobe na hora, e a parcela mensal recomendada diminui de acordo com o progresso!</li>
+      </ol>
+    </section>
+
+    <!-- AUTOMATION AND SYNC -->
+    <section class="page-break">
+      <h2>4. Automação e Sincronização Inteligente</h2>
+      
+      <h3>4.1 Contas e Despesas Recorrentes</h3>
+      <p>
+        Evite esquecer de lançar compromissos fixos mensais (como aluguel, plano de saúde ou mensalidades de serviços digitais):
+      </p>
+      <ul>
+        <li>Cadastre a conta fixa na aba **Recorrências**, informando o valor, o dia de vencimento e a frequência.</li>
+        <li>Toda vez que você inicia o Meu Dindin, o aplicativo analisa de forma inteligente se a data de vencimento passou e realiza o lançamento automático da despesa na conta informada. Praticidade total!</li>
+      </ul>
+
+      <h3>4.2 Sincronização em Nuvem (Google Sheets)</h3>
+      <p>
+        Caso queira utilizar o aplicativo em mais de um computador ou deseje ter uma cópia de segurança integrada, você pode ativar a sincronização em nuvem que se conecta diretamente com a sua conta pessoal do Google Drive:
+      </p>
+      <ol class="step-list">
+        <li>
+          Abra o modal de Sincronização clicando no ícone de nuvem no canto superior direito.
+        </li>
+        <li>
+          Siga o guia rápido exibido na tela para criar uma planilha no seu Google Drive, colar o código de integração fornecido e gerar uma URL de Web App.
+        </li>
+        <li>
+          Defina uma **Chave de Acesso** (senha personalizada) forte e insira junto com a URL no aplicativo. Essa Chave funciona como um escudo de segurança privada na planilha para impedir acessos não autorizados.
+        </li>
+        <li>
+          Clique em **Salvar e Sincronizar**. O aplicativo preencherá as tabelas automaticamente. Conforme você fizer lançamentos no aplicativo, as atualizações serão transmitidas em segundo plano após 2,5 segundos sem nenhuma complicação.
+        </li>
+      </ol>
+    </section>
+
+    <!-- BACKUPS -->
+    <section class="page-break">
+      <h2>5. Backups de Segurança</h2>
+      <p>
+        Você pode extrair e restaurar cópias físicas completas de segurança das suas finanças a qualquer momento na aba de configurações:
+      </p>
+      <ul>
+        <li><strong>Exportar Dados (Backup JSON)</strong>: Baixa um arquivo de segurança diretamente no seu computador contendo todos os seus registros locais. Guarde este arquivo em local seguro.</li>
+        <li><strong>Importar Dados (JSON)</strong>: Permite selecionar um arquivo de backup baixado anteriormente. O Meu Dindin substituirá instantaneamente a base local pelas informações restauradas, recalculando gráficos e saldos perfeitamente.</li>
+      </ul>
+    </section>
+
+    <!-- TUTORIAL ILUSTRADO DE USO COM CAPTURAS DE TELA -->
+    <section class="page-break">
+      <h2>6. Tutorial Ilustrado: Como Usar as Principais Funções</h2>
+      <p>
+        Este guia visual ajuda você a dominar rapidamente todas as operações cotidianas do seu Meu Dindin, mostrando exatamente onde clicar com ilustrações diretas do aplicativo.
+      </p>
+
+      <h3>6.1 O Painel Principal e Tour de Telas</h3>
+      <p>
+        Ao iniciar o aplicativo e cadastrar seu nome no perfil pela primeira vez, o Meu Dindin guiará você com um **Tour Interativo de Holofote (Spotlight Guide)** diretamente na tela. Esse tour destaca visualmente as áreas da barra lateral, cabeçalho de boas-vindas, adição rápida e sincronização.
+      </p>
+      <img src="images/dashboard_dark.png" alt="Painel Geral Consolidado - Meu Dindin" class="manual-screenshot">
+      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-top: -10px; margin-bottom: 20px;">
+        Figura 1: Painel Geral com gráficos de rosca para categorias e área de evolução de caixa de 6 meses.
+      </p>
+
+      <h3>6.2 Cadastrando Lançamentos (Despesas e Receitas) e Recorrências</h3>
+      <p>
+        Para lançar uma nova operação financeira (receita ou despesa) ou uma despesa recorrente agendada:
+      </p>
+      <ol>
+        <li>Clique no botão flutuante no topo direito <strong>"+ Nova Transação"</strong>.</li>
+        <li>No formulário que se abre, escolha se é uma <strong>Receita</strong> (entrada em verde) ou uma <strong>Despesa</strong> (saída em rosa/vermelho).</li>
+        <li>Insira o valor em reais, digite a descrição do lançamento, informe a data correspondente, e vincule a uma **Conta Bancária** e **Categoria** (ex: Alimentação).</li>
+        <li><strong>Automação de Recorrências:</strong> Caso este pagamento se repita todos os meses (ex: Netflix ou Aluguel), marque a caixa "Lançamento recorrente" para que o sistema registre a cobrança automaticamente a cada novo ciclo de faturamento. Alternativamente, cadastre na aba **Contas Recorrentes** para processamento automático inteligente em segundo plano ao abrir o app!</li>
+        <li>Clique em <strong>"Salvar Lançamento"</strong>. Seu saldo de conta será atualizado retroativamente e o gráfico se redesenhará na mesma hora!</li>
+      </ol>
+
+      <h3>6.3 Criando, Editando e Excluindo Contas</h3>
+      <p>
+        Para gerenciar de forma profissional onde seu dinheiro é guardado:
+      </p>
+      <ul>
+        <li><strong>Criar Contas:</strong> Vá na aba **Contas & Categorias** no menu lateral, clique em **"Nova Conta"**, dê um nome descritivo (ex: "Carteira Dinheiro"), defina o tipo (Corrente, Poupança, Crédito ou Dinheiro) e informe o saldo inicial.</li>
+        <li><strong>Editar Contas:</strong> Clique no botão de edição (lápis) ao lado da conta que deseja ajustar para atualizar o saldo manual ou corrigir o nome.</li>
+        <li><strong>Excluir Contas:</strong> Clique no ícone de lixeira. Quaisquer lançamentos que dependiam da conta serão preservados para integridade histórica, marcados sem conta vinculada.</li>
+      </ul>
+
+      <h3>6.4 Criando e Excluindo Categorias</h3>
+      <p>
+        Personalizar suas divisões de gastos permite relatórios analíticos perfeitos no gráfico de rosca:
+      </p>
+      <ul>
+        <li><strong>Criar Nova Categoria:</strong> Na aba **Contas & Categorias**, localize a seção "Categorias Financeiras", clique em **"Nova Categoria"**, selecione se ela classifica Receitas ou Despesas, escolha uma cor vibrante exclusiva e um ícone temático descritivo (Lucide Icons).</li>
+        <li><strong>Editar Categorias:</strong> Ajuste a cor ou renomeie qualquer categoria cadastrada simplesmente clicando no ícone do lápis.</li>
+        <li><strong>Excluir Categorias:</strong> Clique no botão de lixeira. As transações antigas vinculadas a ela serão rotuladas com a categoria "Outros" para evitar perda de dados históricos.</li>
+      </ul>
+      <img src="images/savings_goals.png" alt="Gestão de Metas e Poupanças - Meu Dindin" class="manual-screenshot">
+      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-top: -10px; margin-bottom: 20px;">
+        Figura 2: Aba deslizante interativa de Metas de Poupança com aporte rápido (+) e retirada (-) em tempo real.
+      </p>
+
+      <h3>6.5 Ativando a Sincronização Segura com Google Sheets</h3>
+      <p>
+        A sincronização integrada permite que seus dados locais sejam transmitidos e guardados de forma segura e encriptada na sua própria planilha do Google:
+      </p>
+      <img src="images/sheets_sync.png" alt="Sincronização em Nuvem - Meu Dindin" class="manual-screenshot">
+      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-top: -10px; margin-bottom: 20px;">
+        Figura 3: Modal de controle de nuvem integrado para Chave de Acesso e URL do Web App Google Sheets.
+      </p>
+      <ol>
+        <li>Abra o modal de nuvem no aplicativo (ícone no topo direito).</li>
+        <li>Clique no botão para criar uma Planilha em Branco no seu Google Drive.</li>
+        <li>Copie o script fornecido no modal e cole-o na seção <strong>"Extensões > Apps Script"</strong> da sua planilha Google.</li>
+        <li>Clique em <strong>"Implantar > Nova Implantação"</strong> no Apps Script, selecione "Aplicativo Web", conceda acesso e gere a URL pública de integração.</li>
+        <li>Cole a URL gerada e crie uma **Chave de Acesso** (Token de Segurança) forte no aplicativo. Salve as alterações e clique em **"Salvar e Sincronizar"**. Os dados locais serão enviados e a planilha será montada perfeitamente na hora, dividida em abas coloridas e formatadas!</li>
+      </ol>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>Manual Oficial de Instruções de Uso - Meu Dindin</p>
+      <p>Copyright © 2026 Meu Dindin App. Todos os direitos reservados. Assistente Financeiro Pessoal.</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>
