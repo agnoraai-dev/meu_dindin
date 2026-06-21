@@ -606,6 +606,83 @@ function initMockData() {
   saveData();
 }
 
+export function loadDemoMockData() {
+  // 1. Zerar absolutamente tudo para evitar duplicados
+  state.transactions = [];
+  state.categories = [];
+  state.accounts = [];
+  state.budgets = [];
+  state.recurring = [];
+  state.goals = [];
+  
+  // 2. Recriar categorias padrão usando o método exposto
+  const cSalario = addCategory({ name: 'Salário', type: 'income', color: '#10b981', icon: 'briefcase' });
+  const cInvest = addCategory({ name: 'Investimentos', type: 'income', color: '#06b6d4', icon: 'trending-up' });
+  const cFree = addCategory({ name: 'Freelance', type: 'income', color: '#6366f1', icon: 'gift' });
+  
+  const cAliment = addCategory({ name: 'Alimentação', type: 'expense', color: '#fb7185', icon: 'utensils' });
+  const cAluguel = addCategory({ name: 'Casa & Aluguel', type: 'expense', color: '#3b82f6', icon: 'home' });
+  const cLazer = addCategory({ name: 'Lazer & Cinema', type: 'expense', color: '#fbbf24', icon: 'clapperboard' });
+  const cTransp = addCategory({ name: 'Transporte', type: 'expense', color: '#2dd4bf', icon: 'car' });
+  const cSaude = addCategory({ name: 'Saúde & Farmácia', type: 'expense', color: '#f43f5e', icon: 'heart-pulse' });
+  const cEduc = addCategory({ name: 'Educação', type: 'expense', color: '#a855f7', icon: 'graduation-cap' });
+
+  // 3. Cadastrar contas com saldos iniciais de partida
+  const accNubank = addAccount({ name: 'Nubank (Corrente)', type: 'checking', balance: 2450.00 });
+  const accPoupanca = addAccount({ name: 'Caixa Poupança', type: 'savings', balance: 12000.00 });
+  const accCarteira = addAccount({ name: 'Carteira (Dinheiro)', type: 'cash', balance: 150.00 });
+  const accMastercard = addAccount({ name: 'Mastercard Nubank', type: 'credit', balance: -850.00 });
+
+  // 4. Cadastrar orçamentos por categoria
+  addBudget({ category: cAliment.id, period: 'monthly', amount: 800.00 });
+  addBudget({ category: cLazer.id, period: 'monthly', amount: 300.00 });
+  addBudget({ category: cTransp.id, period: 'monthly', amount: 400.00 });
+
+  // 5. Cadastrar metas de poupança (prazos no futuro usando dias negativos)
+  addGoal({ name: 'Reserva de Emergência', targetValue: 15000.00, currentValue: 12000.00, deadline: getRelativeDate(-180), color: '#10b981', icon: 'shield' });
+  addGoal({ name: 'Viagem para Buenos Aires', targetValue: 6000.00, currentValue: 2400.00, deadline: getRelativeDate(-240), color: '#3b82f6', icon: 'plane' });
+
+  // 6. Cadastrar recorrências
+  addRecurring({
+    description: 'Assinatura Netflix',
+    value: 55.90,
+    type: 'expense',
+    frequency: 'monthly',
+    category: cLazer.id,
+    account: accMastercard.id,
+    startDate: getRelativeDate(15),
+    autoProcess: true
+  });
+  addRecurring({
+    description: 'Aluguel Apartamento',
+    value: 1200.00,
+    type: 'expense',
+    frequency: 'monthly',
+    category: cAluguel.id,
+    account: accNubank.id,
+    startDate: getRelativeDate(10),
+    autoProcess: true
+  });
+
+  // 7. Cadastrar transações com datas realistas nos últimos 15 dias para gráficos perfeitos
+  addTransaction({ description: 'Salário Mensal', value: 4500.00, date: getRelativeDate(15), type: 'income', category: cSalario.id, account: accNubank.id });
+  addTransaction({ description: 'Freelance Website UI', value: 850.00, date: getRelativeDate(5), type: 'income', category: cFree.id, account: accNubank.id });
+  addTransaction({ description: 'Rendimento Poupança', value: 72.50, date: getRelativeDate(2), type: 'income', category: cInvest.id, account: accPoupanca.id });
+
+  addTransaction({ description: 'Aluguel Mensal', value: 1200.00, date: getRelativeDate(10), type: 'expense', category: cAluguel.id, account: accNubank.id });
+  addTransaction({ description: 'Supermercado Mensal', value: 345.90, date: getRelativeDate(8), type: 'expense', category: cAliment.id, account: accMastercard.id });
+  addTransaction({ description: 'Combustível Posto Shell', value: 180.00, date: getRelativeDate(7), type: 'expense', category: cTransp.id, account: accMastercard.id });
+  addTransaction({ description: 'Jantar em Casal', value: 120.00, date: getRelativeDate(5), type: 'expense', category: cLazer.id, account: accMastercard.id });
+  addTransaction({ description: 'Uber para Reunião', value: 24.50, date: getRelativeDate(4), type: 'expense', category: cTransp.id, account: accCarteira.id });
+  addTransaction({ description: 'Cinema & Pipoca', value: 65.00, date: getRelativeDate(3), type: 'expense', category: cLazer.id, account: accCarteira.id });
+  addTransaction({ description: 'Farmácia de Manipulação', value: 89.90, date: getRelativeDate(2), type: 'expense', category: cSaude.id, account: accMastercard.id });
+  addTransaction({ description: 'Curso de Finanças Online', value: 199.90, date: getRelativeDate(1), type: 'expense', category: cEduc.id, account: accMastercard.id });
+
+  state.userName = 'Carlos Oliveira';
+  state.hasSeenTour = true;
+  notifyStateChanged();
+}
+
 // ==========================================================================
 // INTEGRAÇÃO DE SINCRONIZAÇÃO EM NUVEM (GOOGLE APPS SCRIPT)
 // ==========================================================================

@@ -318,6 +318,13 @@ function setupActionEventListeners() {
     }
   });
 
+  document.getElementById('btn-load-demo')?.addEventListener('click', () => {
+    if (confirm("Deseja carregar a base de dados de demonstração com contas, metas e transações fictícias pré-configuradas? Isso irá substituir quaisquer dados locais atuais.")) {
+      State.loadDemoMockData();
+      alert("Base de dados fictícia carregada com sucesso! Você já pode navegar nas telas e gerar capturas de tela.");
+    }
+  });
+
   document.getElementById('btn-wipe-transactions')?.addEventListener('click', () => {
     if (confirm("ATENÇÃO: Isso apagará todas as suas transações, metas de orçamento e agendamentos recorrentes. Suas contas (com saldo zerado) e suas categorias cadastradas serão preservadas para você começar a digitar seus dados reais imediatamente. Confirmar?")) {
       State.resetAllData(true);
