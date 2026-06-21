@@ -6,7 +6,7 @@ const STORAGE_KEY = 'antigravity_meudindin_data';
 
 // URL da API de Validação de Licenças.
 // IMPORTANTE: Substitua pelo seu domínio definitivo da Vercel.
-const PROD_VERCEL_URL = 'https://meu-dindin-five-delta.vercel.app'; 
+const PROD_VERCEL_URL = 'https://meu-dindin-three.vercel.app'; 
 
 const isDesktop = typeof window !== 'undefined' && 
   (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.protocol === 'file:');
