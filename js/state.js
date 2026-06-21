@@ -4,10 +4,21 @@
 
 const STORAGE_KEY = 'antigravity_meudindin_data';
 
+// URL da API de Validação de Licenças.
+// IMPORTANTE: Substitua pelo seu domínio definitivo da Vercel.
+const PROD_VERCEL_URL = 'https://meu-dindin-five-delta.vercel.app'; 
+
+const isDesktop = typeof window !== 'undefined' && 
+  (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.protocol === 'file:');
+
+const LICENSE_API_URL = isDesktop ? `${PROD_VERCEL_URL}/api/validate` : '/api/validate';
+
 // Estado global em memória
 let state = {
   userName: 'Usuário',
   hasSeenTour: false,
+  licenseEmail: '',
+  licenseStatus: 'inactive',
   transactions: [],
   categories: [],
   accounts: [],
@@ -75,6 +86,14 @@ export function loadData() {
 
       if (state.hasSeenTour === undefined) {
         state.hasSeenTour = false;
+      }
+
+      if (state.licenseEmail === undefined) {
+        state.licenseEmail = '';
+      }
+
+      if (state.licenseStatus === undefined) {
+        state.licenseStatus = 'inactive';
       }
       
       // Auto-processa lançamentos recorrentes agendados
@@ -820,6 +839,68 @@ export async function pushToCloud() {
     console.error("Erro ao fazer upload dos dados:", error);
     isSyncingInProgress = false;
     dispatchSyncStatus('error', 'Falha ao salvar na nuvem.');
+  }
+}
+
+/**
+ * Valida a licença do e-mail do usuário usando o endpoint serverless na Vercel.
+ */
+export async function verifyLicense(email) {
+  if (!email || !email.includes('@')) {
+    return { success: false, message: 'Por favor, insira um e-mail válido.' };
+  }
+
+  try {
+    const url = `${LICENSE_API_URL}?email=${encodeURIComponent(email.trim().toLowerCase())}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Erro na validação (${response.status})`);
+    }
+
+    const data = await response.json();
+    if (data.active) {
+      state.licenseEmail = email.trim().toLowerCase();
+      state.licenseStatus = 'active';
+      notifyStateChanged();
+      return { success: true, message: 'Licença ativada com sucesso!' };
+    } else {
+      state.licenseStatus = data.plan_type ? data.status || 'inactive' : 'inactive';
+      notifyStateChanged();
+      return { success: false, message: data.message || 'Licença inativa ou não cadastrada.' };
+    }
+  } catch (err) {
+    console.error('Erro de validação de licença:', err);
+    return { success: false, message: 'Não foi possível conectar ao servidor de ativação. Verifique sua internet.' };
+  }
+}
+
+/**
+ * Validação em segundo plano (silent) executada no boot do aplicativo para prevenir chargebacks.
+ * Caso o usuário esteja offline, a validação é pulada permitindo o funcionamento local.
+ */
+export async function checkBackgroundLicense() {
+  if (!state.licenseEmail) return;
+
+  try {
+    const url = `${LICENSE_API_URL}?email=${encodeURIComponent(state.licenseEmail)}`;
+    const response = await fetch(url);
+    if (!response.ok) return; // Se o servidor de licenças falhar (ex: 500 ou offline), não bloqueia
+
+    const data = await response.json();
+    const oldStatus = state.licenseStatus;
+    
+    if (data.active) {
+      state.licenseStatus = 'active';
+    } else {
+      state.licenseStatus = data.status || 'inactive';
+    }
+
+    if (oldStatus !== state.licenseStatus) {
+      notifyStateChanged();
+    }
+  } catch (err) {
+    // Offline silencioso: respeita o funcionamento Local-First do app
+    console.warn('Verificação de licença em segundo plano falhou (usuário offline):', err.message);
   }
 }
 

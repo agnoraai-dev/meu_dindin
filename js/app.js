@@ -11,6 +11,9 @@ window.addEventListener('DOMContentLoaded', () => {
   // 1. Carrega os dados ou inicializa com dados mock
   State.loadData();
 
+  // 1.5. Inicializa os ouvintes da tela de ativação
+  UI.initActivationUI();
+
   // 2. Inicializa o estado dos gráficos
   Charts.initCharts();
 
@@ -42,14 +45,15 @@ window.addEventListener('DOMContentLoaded', () => {
   setupActionEventListeners();
   setupFilterEventListeners();
 
-  // 9. Primeiro render geral para apresentar a interface povoada
+  // 9. Primeiro render geral para apresentar a interface povoada (ou tela de ativação)
   UI.renderAll();
 
   // 9.5 Exibe o Onboarding Tour automaticamente no primeiro acesso
   UI.showOnboardingIfNeeded();
 
-  // 10. Verifica se há novos dados no Google Sheets em segundo plano (Boot Sync)
+  // 10. Verifica licença e sincronização em segundo plano
   setTimeout(() => {
+    State.checkBackgroundLicense();
     State.checkCloudSync();
   }, 1000);
 });

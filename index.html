@@ -24,6 +24,50 @@
 </head>
 <body>
 
+  <!-- Tela de Ativação de Licença (Bloqueio) -->
+  <div id="activation-screen" class="activation-overlay hidden">
+    <div class="activation-card glass-modal">
+      <div class="activation-glow"></div>
+      <div class="activation-header">
+        <div class="activation-logo">
+          <div class="logo-glow"></div>
+          <img src="images/logo.png" alt="Logo" class="brand-icon-img">
+        </div>
+        <h2>Ative seu Meu Dindin</h2>
+        <p>Insira o e-mail cadastrado na compra do produto na Kiwify para liberar o acesso.</p>
+      </div>
+
+      <form id="form-activation" class="activation-form">
+        <div class="form-group">
+          <label for="activation-email">E-mail do Comprador</label>
+          <div class="input-with-icon">
+            <i data-lucide="mail"></i>
+            <input type="email" id="activation-email" class="form-input" placeholder="seu-email@exemplo.com" required>
+          </div>
+        </div>
+
+        <div id="activation-error" class="activation-alert error hidden">
+          <i data-lucide="alert-circle"></i>
+          <span id="activation-error-text">E-mail não localizado ou licença inativa.</span>
+        </div>
+
+        <button type="submit" id="btn-activate" class="btn btn-primary btn-glow btn-block">
+          <span>Ativar Licença</span>
+          <i data-lucide="key-round"></i>
+        </button>
+      </form>
+
+      <div class="activation-footer">
+        <p>Não possui uma licença? <a href="https://kiwify.com.br" target="_blank" class="buy-link">Adquira o Meu Dindin agora</a></p>
+        <div class="activation-benefits">
+          <span><i data-lucide="check"></i> Acesso Vitalício</span>
+          <span><i data-lucide="check"></i> 100% Offline & Seguro</span>
+          <span><i data-lucide="check"></i> Suporte Premium</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Layout Principal -->
   <div class="app-container">
     

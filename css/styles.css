@@ -2301,3 +2301,266 @@ input, select, button, textarea {
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
+/* Utility Class: Hidden */
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   TELA DE ATIVAÇÃO DE LICENÇA (BLOQUEIO COMERCIAl)
+   ========================================================================== */
+
+.activation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #0e1726 0%, #06090e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.activation-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: rgba(15, 22, 38, 0.65);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 40px 30px;
+  box-sizing: border-box;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.05);
+  animation: modalEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.activation-glow {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(99, 102, 241, 0.12) 50%, transparent 100%);
+  pointer-events: none;
+  filter: blur(20px);
+}
+
+.activation-logo {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activation-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.activation-header h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 10px;
+  background: linear-gradient(135deg, #10b981 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.activation-header p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0 0 30px;
+}
+
+.activation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+}
+
+.activation-form label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.activation-form .input-with-icon {
+  position: relative;
+}
+
+.activation-form .input-with-icon i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary);
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.activation-form .form-input {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  box-sizing: border-box;
+  background: rgba(8, 12, 20, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.activation-form .form-input:focus {
+  border-color: var(--color-indigo);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
+  background: rgba(8, 12, 20, 0.95);
+}
+
+.activation-form .form-input:focus + i {
+  color: var(--color-indigo);
+}
+
+.activation-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+.activation-alert.error {
+  background: rgba(244, 63, 94, 0.08);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  color: #fb7185;
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.08);
+}
+
+.activation-alert.error i {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.btn-block {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.activation-footer {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.activation-footer p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.buy-link {
+  color: #10b981;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.buy-link:hover {
+  color: #34d399;
+  text-decoration: underline;
+}
+
+.activation-benefits {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.activation-benefits span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.activation-benefits span i {
+  width: 12px;
+  height: 12px;
+  color: #10b981;
+}
+
+/* Estado de desativação (bloqueia o app principal) */
+body.unlicensed .app-container {
+  display: none !important;
+}
+
+body.unlicensed .activation-overlay {
+  display: flex !important;
+}
+
+/* Spinner animado no botão durante a validação */
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: white;
+  border-radius: 50%;
+  animation: button-loading-spinner 0.6s linear infinite;
+}
+
+@keyframes button-loading-spinner {
+  from { transform: rotate(0turn); }
+  to { transform: rotate(1turn); }
+}
+

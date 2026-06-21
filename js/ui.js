@@ -181,6 +181,15 @@ function updateActiveView(viewId) {
 
 export function renderAll() {
   const data = State.loadData();
+  
+  // Bloqueio comercial por licença ativa
+  if (data.licenseStatus !== 'active') {
+    toggleActivationScreen(true);
+    return;
+  } else {
+    toggleActivationScreen(false);
+  }
+
   const currentViewId = document.querySelector('.app-view.active')?.id.replace('view-', '') || 'dashboard';
   updateActiveView(currentViewId);
   updatePeriodLabel();
@@ -1739,5 +1748,71 @@ export function endInteractiveScreenTour() {
 
   // Volta para a tela inicial (Dashboard) de forma amigável
   switchView('dashboard');
+}
+
+/**
+ * Controla a visibilidade da tela de ativação.
+ */
+export function toggleActivationScreen(show) {
+  const screen = document.getElementById('activation-screen');
+  if (!screen) return;
+
+  if (show) {
+    screen.classList.remove('hidden');
+    document.body.classList.add('unlicensed');
+  } else {
+    screen.classList.add('hidden');
+    document.body.classList.remove('unlicensed');
+  }
+}
+
+/**
+ * Inicializa os escutadores do formulário de ativação de licença.
+ */
+export function initActivationUI() {
+  const form = document.getElementById('form-activation');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const emailInput = document.getElementById('activation-email');
+    const submitBtn = document.getElementById('btn-activate');
+    const alertBox = document.getElementById('activation-error');
+    const alertText = document.getElementById('activation-error-text');
+
+    if (!emailInput || !submitBtn || !alertBox || !alertText) return;
+
+    // Coloca o botão em estado de loading
+    submitBtn.classList.add('btn-loading');
+    alertBox.classList.add('hidden');
+
+    const result = await State.verifyLicense(emailInput.value);
+
+    // Remove estado de loading
+    submitBtn.classList.remove('btn-loading');
+
+    if (result.success) {
+      // Licença válida! Desbloqueia e renderiza
+      toggleActivationScreen(false);
+      renderAll();
+      
+      // Abre o onboarding se necessário
+      showOnboardingIfNeeded();
+    } else {
+      // Exibe mensagem de erro
+      alertText.innerText = result.message;
+      alertBox.classList.remove('hidden');
+    }
+  });
+
+  // Garante que o Lucide crie os ícones da tela de ativação
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons({
+      attrs: {
+        class: 'lucide-icon'
+      },
+      nameAttr: 'data-lucide'
+    });
+  }
 }
 
