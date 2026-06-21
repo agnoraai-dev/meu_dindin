@@ -5,9 +5,10 @@
 import * as State from './state.js';
 import * as Charts from './charts.js';
 
-// Período de visualização ativo (Inicia no mês atual: Maio de 2026)
-let currentMonth = 4; // 0-indexed (Maio)
-let currentYear = 2026;
+// Período de visualização ativo (Inicia no mês/ano atual do sistema)
+const initialDate = new Date();
+let currentMonth = initialDate.getMonth();
+let currentYear = initialDate.getFullYear();
 
 // Categoria ativa na visualização de abas
 let activeCategoryTab = 'expense';
