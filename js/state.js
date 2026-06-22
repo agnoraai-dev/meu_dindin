@@ -19,6 +19,7 @@ let state = {
   hasSeenTour: false,
   licenseEmail: '',
   licenseStatus: 'inactive',
+  licensePlan: '',
   transactions: [],
   categories: [],
   accounts: [],
@@ -94,6 +95,10 @@ export function loadData() {
 
       if (state.licenseStatus === undefined) {
         state.licenseStatus = 'inactive';
+      }
+
+      if (state.licensePlan === undefined) {
+        state.licensePlan = '';
       }
       
       // Auto-processa lançamentos recorrentes agendados
@@ -861,10 +866,12 @@ export async function verifyLicense(email) {
     if (data.active) {
       state.licenseEmail = email.trim().toLowerCase();
       state.licenseStatus = 'active';
+      state.licensePlan = data.plan_type || '';
       notifyStateChanged();
       return { success: true, message: 'Licença ativada com sucesso!' };
     } else {
       state.licenseStatus = data.plan_type ? data.status || 'inactive' : 'inactive';
+      state.licensePlan = data.plan_type || '';
       notifyStateChanged();
       return { success: false, message: data.message || 'Licença inativa ou não cadastrada.' };
     }
@@ -888,14 +895,17 @@ export async function checkBackgroundLicense() {
 
     const data = await response.json();
     const oldStatus = state.licenseStatus;
+    const oldPlan = state.licensePlan;
     
     if (data.active) {
       state.licenseStatus = 'active';
+      state.licensePlan = data.plan_type || '';
     } else {
       state.licenseStatus = data.status || 'inactive';
+      state.licensePlan = data.plan_type || '';
     }
 
-    if (oldStatus !== state.licenseStatus) {
+    if (oldStatus !== state.licenseStatus || oldPlan !== state.licensePlan) {
       notifyStateChanged();
     }
   } catch (err) {

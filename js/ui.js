@@ -1399,6 +1399,25 @@ export function renderUserProfile(data) {
     const firstName = userName.split(' ')[0] || 'Visitante';
     welcomeTitle.innerText = `Olá, ${firstName}`;
   }
+
+  // 4. Tipo de Licença no Perfil (Sidebar Footer)
+  const roleEl = document.querySelector('.sidebar .user-role');
+  if (roleEl) {
+    if (data.licenseStatus === 'active') {
+      const plans = {
+        web_subscription: 'Assinatura Web 🌐',
+        desktop_lifetime: 'Desktop Vitalício 🐷',
+        desktop_update_pass: 'Passe de Atualizações 🔄'
+      };
+      roleEl.innerText = plans[data.licensePlan] || 'Licença Ativa ✅';
+      roleEl.style.color = '#10b981'; // Cor verde neon para licença ativa
+      roleEl.style.textShadow = '0 0 8px rgba(16, 185, 129, 0.4)';
+    } else {
+      roleEl.innerText = 'Meu Planejador Financeiro';
+      roleEl.style.color = '';
+      roleEl.style.textShadow = '';
+    }
+  }
 }
 
 export function openProfileModal() {
