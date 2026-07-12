@@ -5,6 +5,7 @@
 import * as State from './state.js';
 import * as UI from './ui.js';
 import * as Charts from './charts.js';
+import * as Chat from './chat.js';
 
 // Executado ao carregar o aplicativo
 window.addEventListener('DOMContentLoaded', () => {
@@ -59,6 +60,9 @@ window.addEventListener('DOMContentLoaded', () => {
     State.checkBackgroundLicense();
     State.checkCloudSync();
   }, 1000);
+
+  // 11. Inicializa o Assistente Financeiro com IA
+  Chat.initChatUI();
 });
 
 // ==========================================================================
