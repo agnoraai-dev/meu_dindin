@@ -1835,3 +1835,485 @@ export function initActivationUI() {
   }
 }
 
+// --- IMPORTADOR INTELIGENTE ---
+let extractedTransactions = [];
+
+export function initSmartImportUI() {
+  const btnTrigger = document.getElementById('btn-smart-import-trigger');
+  if (!btnTrigger) return;
+
+  btnTrigger.addEventListener('click', () => {
+    document.getElementById('paste-text-area').value = '';
+    document.getElementById('import-preview-section').style.display = 'none';
+    document.getElementById('import-preview-body').innerHTML = '';
+    
+    document.querySelectorAll('.import-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.import-tab-content').forEach(content => content.classList.remove('active'));
+    
+    document.querySelector('.import-tab-btn[data-tab="tab-upload-file"]').classList.add('active');
+    document.getElementById('tab-upload-file').classList.add('active');
+    
+    openModal('modal-smart-import');
+  });
+
+  document.querySelectorAll('.import-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.import-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.import-tab-content').forEach(c => c.classList.remove('active'));
+      
+      btn.classList.add('active');
+      const tabId = btn.getAttribute('data-tab');
+      document.getElementById(tabId).classList.add('active');
+    });
+  });
+
+  const btnSelectFile = document.getElementById('btn-select-file');
+  const fileInput = document.getElementById('file-smart-import');
+  
+  btnSelectFile?.addEventListener('click', () => fileInput.click());
+  
+  fileInput?.addEventListener('change', (e) => {
+    const file = e.target.files?.[0];
+    if (file) handleSmartImportFile(file);
+    e.target.value = '';
+  });
+
+  const dragZone = document.getElementById('drag-drop-zone');
+  if (dragZone) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dragZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dragZone.classList.add('dragover');
+      }, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+      dragZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dragZone.classList.remove('dragover');
+      }, false);
+    });
+    
+    dragZone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const file = dt.files[0];
+      if (file) handleSmartImportFile(file);
+    }, false);
+  }
+
+  const btnProcessText = document.getElementById('btn-process-pasted-text');
+  btnProcessText?.addEventListener('click', () => {
+    const text = document.getElementById('paste-text-area').value;
+    if (!text.trim()) {
+      alert("Por favor, cole algum texto de comprovante antes de processar.");
+      return;
+    }
+    const parsed = parseTextReceipt(text);
+    renderImportPreview(parsed);
+  });
+
+  const chkSelectAll = document.getElementById('chk-import-select-all');
+  chkSelectAll?.addEventListener('change', (e) => {
+    const checked = e.target.checked;
+    document.querySelectorAll('.chk-import-item').forEach(chk => {
+      chk.checked = checked;
+    });
+  });
+
+  document.getElementById('btn-cancel-import')?.addEventListener('click', () => {
+    closeModal('modal-smart-import');
+  });
+
+  document.getElementById('btn-save-imported')?.addEventListener('click', () => {
+    const rows = document.querySelectorAll('#import-preview-body tr');
+    let savedCount = 0;
+    
+    rows.forEach(row => {
+      const chk = row.querySelector('.chk-import-item');
+      if (chk && chk.checked) {
+        const idx = chk.getAttribute('data-index');
+        const date = row.querySelector('.import-tx-date').value;
+        const description = row.querySelector('.import-tx-desc').value;
+        const type = row.querySelector('.import-tx-type').value;
+        const value = Number(row.querySelector('.import-tx-value').value);
+        const account = row.querySelector('.import-tx-account').value;
+        const category = row.querySelector('.import-tx-category').value;
+        
+        if (!description || isNaN(value) || value <= 0 || !account || !category) {
+          return;
+        }
+        
+        State.addTransaction({
+          description,
+          value,
+          date,
+          type,
+          category,
+          account,
+          isRecurring: false
+        });
+        savedCount++;
+      }
+    });
+    
+    if (savedCount > 0) {
+      alert(`${savedCount} transações importadas com sucesso!`);
+      closeModal('modal-smart-import');
+    } else {
+      alert("Nenhuma transação selecionada ou dados de preenchimento inválidos.");
+    }
+  });
+}
+
+function handleSmartImportFile(file) {
+  const reader = new FileReader();
+  const extension = file.name.split('.').pop().toLowerCase();
+  
+  reader.onload = (e) => {
+    const text = e.target.result;
+    let parsed = [];
+    
+    if (extension === 'ofx') {
+      parsed = parseOFX(text);
+    } else if (extension === 'csv') {
+      parsed = parseCSV(text);
+    } else {
+      alert("Extensão de arquivo não suportada. Escolha um arquivo .OFX ou .CSV.");
+      return;
+    }
+    
+    renderImportPreview(parsed);
+  };
+  
+  reader.readAsText(file);
+}
+
+function renderImportPreview(txs) {
+  extractedTransactions = txs;
+  const container = document.getElementById('import-preview-body');
+  const countEl = document.getElementById('import-count');
+  const sectionEl = document.getElementById('import-preview-section');
+  
+  if (!container) return;
+  container.innerHTML = '';
+  
+  if (txs.length === 0) {
+    sectionEl.style.display = 'none';
+    alert("Nenhuma transação válida identificada.");
+    return;
+  }
+  
+  countEl.innerText = txs.length;
+  sectionEl.style.display = 'block';
+  
+  const data = State.loadData();
+  const accounts = data.accounts;
+  const categories = data.categories;
+  
+  txs.forEach((tx, idx) => {
+    const row = document.createElement('tr');
+    
+    let accountOptionsHtml = '';
+    accounts.forEach((acc, aIdx) => {
+      const selected = aIdx === 0 ? 'selected' : '';
+      accountOptionsHtml += `<option value="${acc.id}" ${selected}>${escapeHTML(acc.name)}</option>`;
+    });
+    if (accounts.length === 0) {
+      accountOptionsHtml = '<option value="">Sem contas cadastradas</option>';
+    }
+    
+    const filteredCats = categories.filter(c => c.type === tx.type);
+    let categoryOptionsHtml = '';
+    filteredCats.forEach((cat, cIdx) => {
+      const selected = cIdx === 0 ? 'selected' : '';
+      categoryOptionsHtml += `<option value="${cat.id}" ${selected}>${escapeHTML(cat.name)}</option>`;
+    });
+    if (filteredCats.length === 0) {
+      categoryOptionsHtml = '<option value="">Sem categorias</option>';
+    }
+    
+    row.innerHTML = `
+      <td><input type="checkbox" class="chk-import-item" data-index="${idx}" checked></td>
+      <td><input type="date" class="form-input import-tx-date" data-index="${idx}" value="${tx.date}"></td>
+      <td><input type="text" class="form-input import-tx-desc" data-index="${idx}" value="${escapeHTML(tx.description)}"></td>
+      <td>
+        <select class="form-input import-tx-type" data-index="${idx}">
+          <option value="expense" ${tx.type === 'expense' ? 'selected' : ''}>Despesa</option>
+          <option value="income" ${tx.type === 'income' ? 'selected' : ''}>Receita</option>
+        </select>
+      </td>
+      <td><input type="number" step="0.01" class="form-input import-tx-value" data-index="${idx}" value="${tx.value}"></td>
+      <td><select class="form-input import-tx-account" data-index="${idx}">${accountOptionsHtml}</select></td>
+      <td><select class="form-input import-tx-category" data-index="${idx}">${categoryOptionsHtml}</select></td>
+    `;
+    
+    const typeSelect = row.querySelector('.import-tx-type');
+    const catSelect = row.querySelector('.import-tx-category');
+    typeSelect.addEventListener('change', (e) => {
+      const newType = e.target.value;
+      const catsOfType = categories.filter(c => c.type === newType);
+      let newOptionsHtml = '';
+      catsOfType.forEach((cat, cIdx) => {
+        const selected = cIdx === 0 ? 'selected' : '';
+        newOptionsHtml += `<option value="${cat.id}" ${selected}>${escapeHTML(cat.name)}</option>`;
+      });
+      if (catsOfType.length === 0) {
+        newOptionsHtml = '<option value="">Sem categorias</option>';
+      }
+      catSelect.innerHTML = newOptionsHtml;
+      extractedTransactions[idx].type = newType;
+    });
+    
+    container.appendChild(row);
+  });
+  
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+}
+
+export function parseOFX(text) {
+  const transactions = [];
+  const blocks = text.split(/<STMTTRN>/i);
+  for (let i = 1; i < blocks.length; i++) {
+    const block = blocks[i].split(/<\/STMTTRN>/i)[0];
+    
+    const typeMatch = block.match(/<TRNTYPE>(.*)/i);
+    const dateMatch = block.match(/<DTPOSTED>(.*)/i);
+    const amtMatch = block.match(/<TRNAMT>(.*)/i);
+    const memoMatch = block.match(/<MEMO>(.*)/i) || block.match(/<NAME>(.*)/i);
+    
+    if (amtMatch && dateMatch) {
+      const dateStr = dateMatch[1].trim();
+      const amtStr = amtMatch[1].trim();
+      const memoStr = memoMatch ? memoMatch[1].trim() : 'Transação Importada';
+      
+      const year = dateStr.substring(0, 4);
+      const month = dateStr.substring(4, 6);
+      const day = dateStr.substring(6, 8);
+      const date = `${year}-${month}-${day}`;
+      
+      const value = Math.abs(parseFloat(amtStr));
+      const type = parseFloat(amtStr) < 0 ? 'expense' : 'income';
+      
+      transactions.push({
+        date,
+        description: cleanOFXMemo(memoStr),
+        value,
+        type
+      });
+    }
+  }
+  return transactions;
+}
+
+function cleanOFXMemo(memo) {
+  return memo.replace(/<\/?[^>]+(>|$)/g, "").trim();
+}
+
+export function parseCSV(text) {
+  const lines = text.split(/\r?\n/);
+  if (lines.length < 2) return [];
+  
+  const header = lines[0];
+  const separator = header.includes(';') ? ';' : ',';
+  const headers = header.split(separator).map(h => h.trim().toLowerCase());
+  
+  const dateIdx = headers.findIndex(h => h.includes('data') || h.includes('date'));
+  const descIdx = headers.findIndex(h => h.includes('desc') || h.includes('memo') || h.includes('detalhe') || h.includes('historico') || h.includes('histórico'));
+  const valIdx = headers.findIndex(h => h.includes('valor') || h.includes('value') || h.includes('quant') || h.includes('amount') || h.includes('pago'));
+  
+  if (dateIdx === -1 || descIdx === -1 || valIdx === -1) {
+    return parseCSVLinesFallback(lines, separator);
+  }
+  
+  const transactions = [];
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const cols = splitCSVLine(lines[i], separator);
+    if (cols.length <= Math.max(dateIdx, descIdx, valIdx)) continue;
+    
+    const dateStr = cols[dateIdx].trim();
+    const descStr = cols[descIdx].trim();
+    const valStr = cols[valIdx].trim();
+    
+    if (!dateStr || !descStr || !valStr) continue;
+    
+    const date = parseDateStr(dateStr);
+    const valueRaw = parseValueStr(valStr);
+    if (isNaN(valueRaw)) continue;
+    
+    const value = Math.abs(valueRaw);
+    const type = valueRaw < 0 ? 'expense' : 'income';
+    
+    transactions.push({
+      date,
+      description: descStr,
+      value,
+      type
+    });
+  }
+  return transactions;
+}
+
+function splitCSVLine(line, separator) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === separator && !inQuotes) {
+      result.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current);
+  return result.map(s => s.replace(/^"|"$/g, '').trim());
+}
+
+function parseCSVLinesFallback(lines, separator) {
+  const transactions = [];
+  for (let i = 0; i < lines.length; i++) {
+    const cols = splitCSVLine(lines[i], separator);
+    if (cols.length < 3) continue;
+    
+    const date = parseDateStr(cols[0]);
+    const val = parseValueStr(cols[2]);
+    if (date && !isNaN(val)) {
+      transactions.push({
+        date,
+        description: cols[1],
+        value: Math.abs(val),
+        type: val < 0 ? 'expense' : 'income'
+      });
+    }
+  }
+  return transactions;
+}
+
+export function parseDateStr(str) {
+  str = str.replace(/\//g, '-').trim();
+  const parts = str.split('-');
+  if (parts.length === 3) {
+    if (parts[0].length === 4) {
+      return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+    } else if (parts[2].length === 4) {
+      return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+    } else if (parts[2].length === 2) {
+      return `20${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+    }
+  }
+  try {
+    const d = new Date(str);
+    if (!isNaN(d.getTime())) {
+      return d.toISOString().split('T')[0];
+    }
+  } catch (e) {}
+  return new Date().toISOString().split('T')[0];
+}
+
+export function parseValueStr(str) {
+  str = str.replace(/[R\$\s]/gi, '').trim();
+  const commaIdx = str.lastIndexOf(',');
+  const dotIdx = str.lastIndexOf('.');
+  if (commaIdx > dotIdx) {
+    str = str.replace(/\./g, '').replace(',', '.');
+  } else if (dotIdx > commaIdx) {
+    str = str.replace(/,/g, '');
+  } else if (commaIdx !== -1 && dotIdx === -1) {
+    str = str.replace(',', '.');
+  }
+  return parseFloat(str);
+}
+
+export function parseTextReceipt(text) {
+  const lines = text.split('\n');
+  let value = null;
+  let date = null;
+  let description = null;
+  let type = 'expense';
+  
+  const valuePatterns = [
+    /(?:valor|valor pago|valor cobrado|valor transferido|total|total pago|quantia)[\s:=$]*R?\$?\s*([0-9.,]+)/i,
+    /R\$\s*([0-9.,]+)/i,
+    /([0-9.,]+)\s*R\$/i
+  ];
+  
+  for (const pattern of valuePatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      const parsedVal = parseValueStr(match[1]);
+      if (!isNaN(parsedVal) && parsedVal > 0) {
+        value = parsedVal;
+        break;
+      }
+    }
+  }
+  
+  const datePatterns = [
+    /(?:data|data do pagamento|data da transação|realizado em|data\/hora|vencimento)[\s:=$]*([0-9]{2}[/-][0-9]{2}[/-][0-9]{2,4})/i,
+    /(?:data|data do pagamento|data da transação|realizado em|data\/hora|vencimento)[\s:=$]*([0-9]{4}[/-][0-9]{2}[/-][0-9]{2})/i,
+    /([0-9]{2}\/[0-9]{2}\/[0-9]{2,4})/
+  ];
+  
+  for (const pattern of datePatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      date = parseDateStr(match[1]);
+      break;
+    }
+  }
+  if (!date) {
+    date = new Date().toISOString().split('T')[0];
+  }
+  
+  const descPatterns = [
+    /(?:destinatário|recebido por|recebedor|pago a|beneficiário|estabelecimento|para|pagamento de|remetente|enviado por|recebido de|pagador|origem)[\s:=$]+([^\n\r]+)/i,
+    /(?:nome)[\s:=$]+([^\n\r]+)/i
+  ];
+  
+  for (const pattern of descPatterns) {
+    const match = text.match(pattern);
+    if (match && match[1].trim()) {
+      description = match[1].trim();
+      break;
+    }
+  }
+  
+  if (!description) {
+    for (const line of lines) {
+      const cleanLine = line.trim();
+      if (cleanLine.length > 3 && cleanLine.length < 50 && !cleanLine.includes('R$') && !cleanLine.includes(':') && !/\d{5,}/.test(cleanLine)) {
+        description = cleanLine;
+        break;
+      }
+    }
+  }
+  if (!description) {
+    description = "Comprovante Importado";
+  }
+  
+  const incomeKeywords = [/recebido/i, /reembolso/i, /estorno/i, /salário/i, /salario/i, /recebimento/i, /transferência recebida/i, /pix recebido/i];
+  for (const kw of incomeKeywords) {
+    if (kw.test(text)) {
+      type = 'income';
+      break;
+    }
+  }
+  
+  if (value) {
+    return [{
+      date,
+      description,
+      value,
+      type
+    }];
+  }
+  
+  return [];
+}
+

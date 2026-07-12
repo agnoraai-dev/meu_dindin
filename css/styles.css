@@ -2564,3 +2564,156 @@ body.unlicensed .activation-overlay {
   to { transform: rotate(1turn); }
 }
 
+/* ==========================================================================
+   IMPORTADOR INTELIGENTE (ESTILOS COMPLEMENTARES)
+   ========================================================================== */
+.modal-large {
+  max-width: 900px !important;
+  width: 95%;
+}
+
+.import-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.import-tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: var(--border-radius-sm);
+  transition: all 0.2s ease;
+}
+
+.import-tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.import-tab-btn.active {
+  color: var(--indigo-glow);
+  background: rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.05);
+}
+
+.import-tab-content {
+  display: none;
+}
+
+.import-tab-content.active {
+  display: block;
+}
+
+.drag-drop-zone {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 40px 20px;
+  text-align: center;
+  background: rgba(15, 22, 38, 0.3);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.drag-drop-zone:hover, .drag-drop-zone.dragover {
+  border-color: var(--indigo-glow);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.drag-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.drag-drop-zone:hover .drag-icon, .drag-drop-zone.dragover .drag-icon {
+  color: var(--indigo-glow);
+}
+
+.file-help-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.import-preview-section {
+  margin-top: 25px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+}
+
+.preview-title {
+  font-size: 1.05rem;
+  margin-bottom: 15px;
+  color: var(--text-primary);
+}
+
+.import-table-container {
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: rgba(8, 12, 20, 0.6);
+}
+
+.import-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.import-table th, .import-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.import-table th {
+  background: rgba(15, 22, 38, 0.9);
+  color: var(--text-secondary);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.import-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.import-table .form-input {
+  padding: 6px 8px;
+  font-size: 0.8rem;
+  height: auto;
+  min-height: auto;
+  width: 100%;
+}
+
+.import-table select.form-input {
+  padding-right: 20px;
+}
+
+.import-table input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--indigo-glow);
+}
+
+.flex-align-center {
+  display: flex;
+  align-items: center;
+}
+
+

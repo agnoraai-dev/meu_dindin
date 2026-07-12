@@ -271,8 +271,9 @@
           <h2>Lista de Transações</h2>
           <div class="transactions-actions">
             <button id="btn-export" class="btn btn-secondary"><i data-lucide="download"></i> Exportar Dados</button>
-            <button id="btn-import-trigger" class="btn btn-secondary"><i data-lucide="upload"></i> Importar Dados</button>
+            <button id="btn-import-trigger" class="btn btn-secondary"><i data-lucide="upload"></i> Importar Backup</button>
             <input type="file" id="file-import" accept=".json" style="display: none;">
+            <button id="btn-smart-import-trigger" class="btn btn-primary"><i data-lucide="receipt"></i> Importação Inteligente</button>
             <button id="btn-reset" class="btn btn-danger"><i data-lucide="trash-2"></i> Limpar Tudo</button>
           </div>
         </div>
@@ -638,6 +639,67 @@
           <button type="submit" class="btn btn-primary">Salvar Conta</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal: Importador Inteligente -->
+  <div id="modal-smart-import" class="modal-overlay">
+    <div class="modal-content glass-modal modal-large">
+      <div class="modal-header">
+        <h3 class="flex-align-center"><i data-lucide="receipt" class="indigo-color" style="margin-right: 8px;"></i> Importador Inteligente</h3>
+        <button class="btn-close-modal"><i data-lucide="x"></i></button>
+      </div>
+      
+      <div class="import-tabs">
+        <button type="button" class="import-tab-btn active" data-tab="tab-upload-file">Upload de Arquivo (OFX / CSV)</button>
+        <button type="button" class="import-tab-btn" data-tab="tab-paste-text">Texto Copiado (Comprovante / Pix)</button>
+      </div>
+
+      <div class="import-tab-content active" id="tab-upload-file">
+        <div class="drag-drop-zone" id="drag-drop-zone">
+          <i data-lucide="upload-cloud" class="drag-icon"></i>
+          <p>Arraste seu arquivo <strong>.OFX</strong> ou <strong>.CSV</strong> aqui ou</p>
+          <button type="button" class="btn btn-secondary" id="btn-select-file">Selecionar Arquivo</button>
+          <input type="file" id="file-smart-import" accept=".ofx,.csv" style="display: none;">
+          <span class="file-help-text">Suporta extratos OFX padrão e faturas/extratos CSV</span>
+        </div>
+      </div>
+
+      <div class="import-tab-content" id="tab-paste-text">
+        <div class="form-group">
+          <label for="paste-text-area">Cole o texto do seu comprovante de Pix, boleto ou fatura:</label>
+          <textarea id="paste-text-area" class="form-input" rows="8" placeholder="Ex: Comprovante de Pix realizado. Valor: R$ 150,00. Data: 24/05/2026. Para: Joao Silva..."></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" id="btn-process-pasted-text">Processar Texto</button>
+      </div>
+
+      <!-- Preview de Transações Extraídas -->
+      <div class="import-preview-section" id="import-preview-section" style="display: none;">
+        <h4 class="preview-title">Transações Identificadas (<span id="import-count">0</span>)</h4>
+        <div class="table-container import-table-container">
+          <table class="import-table">
+            <thead>
+              <tr>
+                <th style="width: 40px;"><input type="checkbox" id="chk-import-select-all" checked></th>
+                <th style="width: 140px;">Data</th>
+                <th>Descrição</th>
+                <th style="width: 110px;">Tipo</th>
+                <th style="width: 110px;">Valor (R$)</th>
+                <th style="width: 150px;">Conta de Destino</th>
+                <th style="width: 150px;">Categoria</th>
+              </tr>
+            </thead>
+            <tbody id="import-preview-body">
+              <!-- Linhas geradas dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="modal-footer import-footer" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-import">Cancelar</button>
+          <button type="button" class="btn btn-primary btn-glow" id="btn-save-imported">Importar Selecionadas</button>
+        </div>
+      </div>
     </div>
   </div>
 

@@ -32,6 +32,9 @@ window.addEventListener('DOMContentLoaded', () => {
   // 6. Inicializa os controles e assinaturas de sincronização Cloud
   UI.initCloudSyncUI();
 
+  // 6.2 Inicializa o Importador Inteligente
+  UI.initSmartImportUI();
+
   // 6.5 Configura a navegação de abas internas em Orçamentos e Metas
   UI.configureBudgetsAndGoalsNavigation();
 
