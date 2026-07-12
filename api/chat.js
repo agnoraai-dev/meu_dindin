@@ -5,7 +5,7 @@
 // Variável de ambiente necessária na Vercel:
 // - GEMINI_API_KEY (chave do Google AI Studio)
 
-const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_MODEL = 'gemini-1.5-flash';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 // System Prompt protegido no servidor — nunca exposto ao cliente
