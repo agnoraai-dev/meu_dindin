@@ -1780,11 +1780,35 @@ input, select, button, textarea {
   .topbar-actions {
     width: 100%;
     justify-content: space-between;
+    align-items: center;
+    gap: 8px;
   }
 
   .period-selector {
     flex-grow: 1;
     justify-content: space-between;
+    gap: 8px;
+    padding: 6px 10px;
+  }
+
+  .period-selector span {
+    font-size: 0.85rem;
+    min-width: 80px;
+  }
+
+  #btn-new-transaction {
+    padding: 0;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #btn-new-transaction span {
+    display: none;
   }
 
   .dashboard-details-grid {
@@ -1801,6 +1825,28 @@ input, select, button, textarea {
 
   .form-row-2 {
     grid-template-columns: 1fr;
+  }
+
+  .view-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .transactions-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .transactions-actions button {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 120px;
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    justify-content: center;
   }
   
   .filter-panel {
