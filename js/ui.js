@@ -941,7 +941,7 @@ function openEditAccountModal(id) {
   document.getElementById('account-id').value = acc.id;
   document.getElementById('account-name').value = acc.name;
   document.getElementById('account-type').value = acc.type;
-  document.getElementById('account-balance').value = acc.balance;
+  document.getElementById('account-balance').value = acc.type === 'credit' ? Math.abs(acc.balance) : acc.balance;
 
   openModal('modal-account');
 }

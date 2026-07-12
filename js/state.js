@@ -286,7 +286,7 @@ export function addAccount(acc) {
     id: generateId(),
     name: acc.name,
     type: acc.type, // 'checking', 'savings', 'credit', 'cash'
-    balance: Number(acc.balance)
+    balance: acc.type === 'credit' ? -Math.abs(Number(acc.balance)) : Number(acc.balance)
   };
   state.accounts.push(newAcc);
   notifyStateChanged();
@@ -298,7 +298,7 @@ export function updateAccount(id, updated) {
   if (acc) {
     acc.name = updated.name;
     acc.type = updated.type;
-    acc.balance = Number(updated.balance);
+    acc.balance = updated.type === 'credit' ? -Math.abs(Number(updated.balance)) : Number(updated.balance);
     notifyStateChanged();
     return acc;
   }
