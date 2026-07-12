@@ -71,14 +71,19 @@ export default async function handler(req, res) {
     : SYSTEM_PROMPT;
 
   try {
+    // Copia o histórico para não mutar o objeto original e injeta o system prompt na mensagem atual
+    const contents = JSON.parse(JSON.stringify(trimmedHistory));
+    const lastUserIndex = contents.map(m => m.role).lastIndexOf('user');
+    
+    if (lastUserIndex >= 0) {
+      contents[lastUserIndex].parts[0].text = `[DIRETRIZES DO ASSISTENTE E CONTEXTO FINANCEIRO]\n${systemText}\n\n[MENSAGEM DO USUÁRIO]\n${contents[lastUserIndex].parts[0].text}`;
+    }
+
     const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: systemText }]
-        },
-        contents: trimmedHistory,
+        contents: contents,
         generationConfig: {
           temperature: 0.7,
           maxOutputTokens: 2048,
