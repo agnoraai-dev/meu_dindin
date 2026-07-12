@@ -94,18 +94,12 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      const geminiMsg = errorData.error?.message || '';
-      console.error(`Erro na API Gemini (${response.status}):`, geminiMsg);
-
-      // Mensagem genérica para o cliente — sem expor detalhes internos
-      if (response.status === 429) {
-        return res.status(429).json({ 
-          error: 'O assistente está com muitas solicitações no momento. Tente novamente em alguns instantes.' 
-        });
-      }
-
-      return res.status(502).json({ 
-        error: 'Não foi possível obter resposta do assistente. Tente novamente.' 
+      console.error(`Erro na API Gemini (${response.status}):`, JSON.stringify(errorData));
+      
+      // Repassa o erro exato para o frontend para facilitar o debug
+      return res.status(response.status).json({ 
+        error: errorData.error?.message || `Erro HTTP ${response.status} na API do Google`,
+        details: errorData
       });
     }
 
