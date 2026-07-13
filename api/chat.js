@@ -6,7 +6,7 @@
 // - GEMINI_API_KEY (chave do Google AI Studio)
 
 const GEMINI_MODEL = 'gemini-1.5-flash';
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent`;
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 // System Prompt protegido no servidor — nunca exposto ao cliente
 const SYSTEM_PROMPT = `Você é um Analista Financeiro Estratégico, um assistente especializado exclusivamente em finanças pessoais. Sua função é analisar dados, diagnosticar saúde financeira e sugerir planos de ação.
