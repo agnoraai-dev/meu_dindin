@@ -96,9 +96,22 @@ export default async function handler(req, res) {
       const errorData = await response.json().catch(() => ({}));
       console.error(`Erro na API Gemini (${response.status}):`, JSON.stringify(errorData));
       
-      // Repassa o erro exato para o frontend para facilitar o debug
+      // Busca a lista de modelos disponíveis para ajudar no diagnóstico
+      let modelsList = [];
+      try {
+        const listResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        if (listResponse.ok) {
+          const listData = await listResponse.json();
+          modelsList = listData.models?.map(m => m.name.replace('models/', '')) || [];
+        }
+      } catch (e) {
+        console.error('Falha ao listar modelos:', e.message);
+      }
+
+      const availableStr = modelsList.length > 0 ? `\n\nModelos disponíveis na sua chave: ${modelsList.join(', ')}` : '';
+
       return res.status(response.status).json({ 
-        error: errorData.error?.message || `Erro HTTP ${response.status} na API do Google`,
+        error: (errorData.error?.message || `Erro HTTP ${response.status} na API do Google`) + availableStr,
         details: errorData
       });
     }
